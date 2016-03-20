@@ -1,0 +1,71 @@
+Old way to get 2 doors:
+			
+			
+			
+switch (block.getType()){
+		case WOODEN_DOOR:
+		case SPRUCE_DOOR:
+		case BIRCH_DOOR:
+		case JUNGLE_DOOR:
+		case ACACIA_DOOR:
+		case DARK_OAK_DOOR:
+		case IRON_DOOR:
+			if (((org.bukkit.material.Door)block.getState().getData()).isTopHalf()){
+				doors[1] = block;
+				Block relative = block.getRelative(BlockFace.DOWN);
+				if (relative.getType() == block.getType()){
+					doors[0] = relative;
+				} else {
+					return null;
+				}
+			} else {
+				doors[0] = block;
+				Block relative = block.getRelative(BlockFace.UP);
+				if (relative.getType() == block.getType()){
+					doors[1] = relative;
+				} else {
+					return null;
+				}
+			}
+			return doors;
+		default:
+			return null;
+		}
+			
+Old way to manual lock check
+if (LockItAPI.isLockString(topline)){
+			Block block = LockItAPI.getAttachedBlock(event.getBlock());
+			if (LockItAPI.isLockable(block)){
+				if (!LockItAPI.isLocked(block) && !LockItAPI.isUpDownLockedDoor(block)){
+					player.sendMessage(ChatColor.GREEN + "Block Locked (manual)");
+					event.setLine(1, player.getName());
+				} else if (!LockItAPI.isLocked(block) && !LockItAPI.isOwnerUpDownLockedDoor(block, player.getName())){ // Block is locked and not owner (NOT REALLY GONNA HIT HERE UNLESS USER HAS OVERRIDE)
+					player.sendMessage(ChatColor.RED + "You cannot lock this");
+					event.getBlock().breakNaturally();
+				} else { // Block is locked
+					player.sendMessage(ChatColor.RED + "You cannot lock this again");
+					event.setLine(0, ChatColor.DARK_RED + "[ERROR]");
+				}
+			} else { // Block is not lockable
+				player.sendMessage(ChatColor.RED + "You cannot lock this block");
+				event.setLine(0, ChatColor.DARK_RED + "[ERROR]");
+			}
+		} else if (LockItAPI.isAdditionalString(topline)){
+			Block block = LockItAPI.getAttachedBlock(event.getBlock());
+			if (LockItAPI.isLockable(block)){
+				if (!LockItAPI.isLocked(block) && LockItAPI.isOwnerUpDownLockedDoor(block, player.getName())){
+					player.sendMessage(ChatColor.GREEN + "Additional sign added (manual)");
+				} else if (!LockItAPI.isLocked(block) && LockItAPI.isUpDownLockedDoor(block) && !LockItAPI.isOwnerUpDownLockedDoor(block, player.getName())){
+					player.sendMessage(ChatColor.RED + "This block is not locked yet");
+					event.setLine(0, ChatColor.DARK_RED + "[ERROR]");
+				} else if (LockItAPI.isOwner(block, player.getName())){
+					player.sendMessage(ChatColor.GREEN + "Additional sign added (manual)");
+				} else { // Block is locked and not owner (NOT REALLY GONNA HIT HERE UNLESS USER HAS OVERRIDE)
+					player.sendMessage(ChatColor.RED + "You cannot lock this block");
+					event.getBlock().breakNaturally();
+				}
+			} else { // Block is not lockable
+				player.sendMessage(ChatColor.RED + "You cannot lock this block");
+				event.setLine(0, ChatColor.DARK_RED + "[ERROR]");
+			}
+		}

@@ -1,0 +1,28 @@
+enable-quick-protect: true
+block-interfere-placement: true
+block-item-transfer-in: false
+block-item-transfer-out: true
+block-hopper-minecart: remove
+private-signs:
+- '[Private]'
+- '[private]'
+additional-signs:
+- '[More Users]'
+- '[more users]'
+timer-signs:
+- '[Timer:@]'
+- '[timer:@]'
+lockables:
+- CHEST
+- TRAPPED_CHEST
+- FURNACE
+- HOPPER
+- BREWING_STAND
+- DIAMOND_BLOCK
+- WOODEN_DOOR
+- SPRUCE_DOOR
+- BIRCH_DOOR
+- JUNGLE_DOOR
+- ACACIA_DOOR
+- DARK_OAK_DOOR
+- IRON_DOOR_BLOCK
