@@ -1,5 +1,6 @@
 package me.crafter.mc.lockettepro;
 
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.minecart.HopperMinecart;
 import org.bukkit.event.EventHandler;
@@ -41,8 +42,25 @@ public class BlockInventoryMoveListener implements Listener {
 	public boolean isInventoryLocked(Inventory inventory){
 		InventoryHolder inventoryholder = inventory.getHolder();
 		if (inventoryholder instanceof BlockState){
-			if (LocketteProAPI.isLocked(((BlockState)inventoryholder).getBlock())){
-				return true;
+			Block block = ((BlockState)inventoryholder).getBlock();
+			if (Config.isCacheEnabled()){ // Cache is enabled
+				if (Utils.hasValidCache(block)){
+					return Utils.getAccess(block);
+				} else {
+					if (LocketteProAPI.isLocked(block)){
+						Utils.setCache(block, true);
+						return true;
+					} else {
+						Utils.setCache(block, false);
+						return false;
+					}
+				}
+			} else { // Cache is disabled
+				if (LocketteProAPI.isLocked(block)){
+					return true;
+				} else {
+					return false;
+				}
 			}
 		}
 		return false;

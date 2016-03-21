@@ -3,6 +3,7 @@ block-interfere-placement: true
 block-item-transfer-in: false
 block-item-transfer-out: true
 block-hopper-minecart: remove
+cache-time-seconds: 10
 private-signs:
 - '[Private]'
 - '[private]'

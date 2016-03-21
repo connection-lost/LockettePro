@@ -2,6 +2,7 @@ package me.crafter.mc.lockettepro;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,6 +12,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 
 public class Utils {
 	
@@ -90,6 +93,39 @@ public class Utils {
 		} else {
 			notified.add(player);
 			return true;
+		}
+	}
+	
+	public static boolean hasValidCache(Block block){
+		List<MetadataValue> metadatas = block.getMetadata("expires");
+		if (!metadatas.isEmpty()){
+			long expires = metadatas.get(0).asLong();
+			if (expires > System.currentTimeMillis()){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean getAccess(Block block){ // Requires hasValidCache()
+		List<MetadataValue> metadatas = block.getMetadata("locked");
+		return metadatas.get(0).asBoolean();
+	}
+	
+	public static void setCache(Block block, boolean access){
+		block.removeMetadata("expires", LockettePro.getPlugin());
+		block.removeMetadata("locked", LockettePro.getPlugin());
+		block.setMetadata("expires", new FixedMetadataValue(LockettePro.getPlugin(), System.currentTimeMillis() + Config.getCacheTimeMillis()));
+		block.setMetadata("locked", new FixedMetadataValue(LockettePro.getPlugin(), access));
+	}
+	
+	public static void resetCache(Block block){
+		block.removeMetadata("expires", LockettePro.getPlugin());
+		block.removeMetadata("locked", LockettePro.getPlugin());
+		for (BlockFace blockface : LocketteProAPI.newsfaces){
+			Block relative = block.getRelative(blockface);
+			relative.removeMetadata("expires", LockettePro.getPlugin());
+			relative.removeMetadata("locked", LockettePro.getPlugin());
 		}
 	}
 	

@@ -27,7 +27,8 @@ public class Config {
 	private static boolean blockinterfereplacement = true;
 	private static boolean blockitemtransferin = false;
 	private static boolean blockitemtransferout = false;
-	//private static int cache = 0;
+	private static int cachetime = 0;
+	private static boolean cacheenabled = false;
 	private static byte blockhopperminecart = 0;
 	
 	
@@ -50,6 +51,11 @@ public class Config {
 		List<String> additionalstringlist = config.getStringList("additional-signs");
 		List<String> timerstringlist = config.getStringList("timer-signs");
 		List<String> timerstringlist2 = new ArrayList<String>();
+		cachetime = config.getInt("cache-time-seconds", 0) * 1000;
+		cacheenabled = (config.getInt("cache-time-seconds", 0) > 0);
+		if (cacheenabled){
+			plugin.getLogger().info("You have cache enabled! This is currently for experimental purpose only!");
+		}
 		for (String timerstring : timerstringlist){
 			if (timerstring.contains("@")) timerstringlist2.add(timerstring);
 		}
@@ -154,5 +160,12 @@ public class Config {
 		return defaultadditionalstring;
 	}
 
+	public static int getCacheTimeMillis(){
+		return cachetime;
+	}
+	
+	public static boolean isCacheEnabled(){
+		return cacheenabled;
+	}
 	
 }
