@@ -2,6 +2,7 @@ package me.crafter.mc.lockettepro;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.minecart.HopperMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -41,6 +42,9 @@ public class BlockInventoryMoveListener implements Listener {
 	
 	public boolean isInventoryLocked(Inventory inventory){
 		InventoryHolder inventoryholder = inventory.getHolder();
+		if (inventoryholder instanceof DoubleChest){
+			inventoryholder = ((DoubleChest)inventoryholder).getLeftSide();
+		}
 		if (inventoryholder instanceof BlockState){
 			Block block = ((BlockState)inventoryholder).getBlock();
 			if (Config.isCacheEnabled()){ // Cache is enabled
