@@ -54,7 +54,8 @@ public class Config {
 		cachetime = config.getInt("cache-time-seconds", 0) * 1000;
 		cacheenabled = (config.getInt("cache-time-seconds", 0) > 0);
 		if (cacheenabled){
-			plugin.getLogger().info("You have cache enabled! This is currently for experimental purpose only!");
+			plugin.getLogger().info("You have cache enabled!");
+			plugin.getLogger().info("This is currently for experimental purpose only!");
 		}
 		for (String timerstring : timerstringlist){
 			if (timerstring.contains("@")) timerstringlist2.add(timerstring);
@@ -82,17 +83,37 @@ public class Config {
 		List<String> unprocesseditems = config.getStringList("lockables");
 		lockables = new HashSet<Material>();
 		for (String unprocesseditem : unprocesseditems){
+			if (unprocesseditem.equals("*")){
+				for (Material material : Material.values()){
+					lockables.add(material);
+				}
+				plugin.getLogger().info("All blocks are default to be lockable!");
+				plugin.getLogger().info("Add '-<Material>' to exempt a block, such as '-STONE'!");
+			}
+			boolean add = true;
+			if (unprocesseditem.startsWith("-")){
+				add = false;
+				unprocesseditem = unprocesseditem.substring(1);
+			}
 			try { // Is it a number?
 				int materialid = Integer.parseInt(unprocesseditem);
 				// Hit here without error means yes it is
-				lockables.add(Material.getMaterial(materialid));
+				if (add){
+					lockables.add(Material.getMaterial(materialid));
+				} else {
+					lockables.remove(Material.getMaterial(materialid));
+				}
 			} catch (Exception ex){
 				// It is not really a number...
 				Material material = Material.getMaterial(unprocesseditem);
 				if (material == null){
-					plugin.getLogger().info("[LockettePro] " + unprocesseditem + " is not an item!");
+					plugin.getLogger().info(unprocesseditem + " is not an item!");
 				} else {
-					lockables.add(material);
+					if (add){
+						lockables.add(material);
+					} else {
+						lockables.remove(material);
+					}
 				}
 			}
 		}

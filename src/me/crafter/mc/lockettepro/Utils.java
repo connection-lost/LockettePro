@@ -124,8 +124,10 @@ public class Utils {
 		block.removeMetadata("locked", LockettePro.getPlugin());
 		for (BlockFace blockface : LocketteProAPI.newsfaces){
 			Block relative = block.getRelative(blockface);
-			relative.removeMetadata("expires", LockettePro.getPlugin());
-			relative.removeMetadata("locked", LockettePro.getPlugin());
+			if (relative.getType() == block.getType()){
+				relative.removeMetadata("expires", LockettePro.getPlugin());
+				relative.removeMetadata("locked", LockettePro.getPlugin());
+			}
 		}
 	}
 	
