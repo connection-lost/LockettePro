@@ -17,3 +17,6 @@ permissions:
    lockettepro.lock:
       description: Basic lock permission
       default: true
+   lockettepro.edit:
+      description: Edit sign permission
+      default: true
