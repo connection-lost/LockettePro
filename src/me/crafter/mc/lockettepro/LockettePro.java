@@ -21,6 +21,8 @@ public class LockettePro extends JavaPlugin {
     	getServer().getPluginManager().registerEvents(new BlockPlayerListener(), this);
     	getServer().getPluginManager().registerEvents(new BlockEnvironmentListener(), this);
     	getServer().getPluginManager().registerEvents(new BlockInventoryMoveListener(), this);
+    	// Dependency
+    	new Dependency(this);
     	// Other
     	plugin = this;
     	// Metrics

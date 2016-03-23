@@ -33,6 +33,7 @@ public class BlockPlayerListener implements Listener {
 			BlockFace blockface = event.getBlockFace();
 			if (blockface == BlockFace.NORTH || blockface == BlockFace.WEST || blockface == BlockFace.EAST || blockface == BlockFace.SOUTH){
 				Block block = event.getClickedBlock();
+				if (Dependency.isProtectedFrom(block, player)) return; // External check here
 				if (block.getRelative(blockface).getType() != Material.AIR) return; // This location is obstructed
 				if (LocketteProAPI.isLockable(block)){
 					boolean locked = LocketteProAPI.isLocked(block);
