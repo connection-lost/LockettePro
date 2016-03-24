@@ -34,7 +34,7 @@ public class Dependency {
 			if (!worldguard.canBuild(player, block)) return true;
 		}
 		if (residence != null){
-			if (!Residence.getPermsByLocForPlayer(block.getLocation(), player).has("build", true)) return true;
+			if (!Residence.getPermsByLoc(block.getLocation()).playerHas(player.getName(), player.getWorld().getName(), "build", true)) return true;
 		}
 		return false;
 	}
