@@ -457,6 +457,17 @@ public class LocketteProAPI {
 		}
 		return 0;
 	}
+
+	public static int getTimerDoor(Block block){
+		int timersingle = getTimerSingleDoor(block);
+		if (timersingle > 0) return timersingle;
+		for (BlockFace blockface : newsfaces){
+			Block relative = block.getRelative(blockface);
+			timersingle = getTimerSingleDoor(relative);
+			if (timersingle > 0) return timersingle;
+		}
+		return 0;
+	}
 	
 	public static int getTimerSingleDoor(Block block){
 		Block[] doors = getDoors(block);

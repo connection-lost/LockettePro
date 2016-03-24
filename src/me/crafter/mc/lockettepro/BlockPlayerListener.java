@@ -188,7 +188,7 @@ public class BlockPlayerListener implements Listener {
 						BlockState doorstate = doorblock.getState();
 						Openable openablestate = (Openable)doorstate.getData();
 						boolean shouldopen = !openablestate.isOpen(); // Move to here
-						int closetime = LocketteProAPI.getTimerSingleDoor(doorblock);
+						int closetime = LocketteProAPI.getTimerDoor(doorblock);
 						List<Block> doors = new ArrayList<Block>();
 						doors.add(doorblock);
 						if (doorblock.getType() == Material.IRON_DOOR_BLOCK){
