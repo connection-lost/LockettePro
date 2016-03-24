@@ -2,7 +2,7 @@ name: LockettePro
 main: me.crafter.mc.lockettepro.LockettePro
 author: connection_lost
 softdepend: [WorldGuard, Residence]
-version: 1.4
+version: 1.6
 description: >
              LockettePro is a chest protection plugin for Bukkit. It is 100% compatible with original Lockette, but delivers a lot of performance enhancements and feature options.
 commands:
