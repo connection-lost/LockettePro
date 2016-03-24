@@ -89,6 +89,7 @@ public class Config {
 				}
 				plugin.getLogger().info("All blocks are default to be lockable!");
 				plugin.getLogger().info("Add '-<Material>' to exempt a block, such as '-STONE'!");
+				continue;
 			}
 			boolean add = true;
 			if (unprocesseditem.startsWith("-")){
