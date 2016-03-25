@@ -57,8 +57,7 @@ public class LockettePro extends JavaPlugin {
     				return true;
     			case "version":
     				if (sender.hasPermission("lockettepro.version")){
-    					sender.sendMessage("[LockettePro] Plugin: " + plugin.getDescription().getFullName());
-    					sender.sendMessage("[LockettePro] Version: " + plugin.getDescription().getVersion());
+    					sender.sendMessage(plugin.getDescription().getFullName());
     				} else {
     					Utils.sendMessages(sender, Config.getLang("no-permission"));
     				}
@@ -122,6 +121,8 @@ public class LockettePro extends JavaPlugin {
         		        				Utils.sendMessages(player, Config.getLang("sign-changed"));
         		        				break;
         		    				}
+        		    			} else {
+        		    				Utils.sendMessages(player, Config.getLang("sign-need-reselect"));
         		    			}
     		    			}
     					}
