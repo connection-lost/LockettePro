@@ -113,7 +113,7 @@ public class BlockPlayerListener implements Listener {
 			Block block = event.getClickedBlock();
 			Player player = event.getPlayer();
 			if (!player.hasPermission("lockettepro.edit")) return;
-			if (player.hasPermission("lockettepro.edit.admin") || LocketteProAPI.isOwnerOfSign(block, player.getName())){
+			if (LocketteProAPI.isOwnerOfSign(block, player.getName()) || (LocketteProAPI.isLockSign(block) && player.hasPermission("lockettepro.edit.admin"))){
 				Utils.selectSign(player, block);
 				Utils.sendMessages(player, Config.getLang("sign-selected"));
 				Utils.playLockEffect(player, block);
