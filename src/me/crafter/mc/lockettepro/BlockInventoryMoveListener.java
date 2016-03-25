@@ -17,14 +17,19 @@ public class BlockInventoryMoveListener implements Listener {
 	public void onInventoryMove(InventoryMoveItemEvent event){
 		if (Config.isItemTransferOutBlocked() || Config.getHopperMinecartAction() != (byte)0){
 			if (isInventoryLocked(event.getSource())){
-				event.setCancelled(true);
+				if (Config.isItemTransferOutBlocked()){
+					event.setCancelled(true);
+				}
 				// Additional Hopper Minecart Check
 				if (event.getDestination().getHolder() instanceof HopperMinecart) {
 					byte hopperminecartaction = Config.getHopperMinecartAction();
 					switch (hopperminecartaction){
 					// case 0 - Impossible
-					// case 1 - Do not need additional action (already cancelled)
+					case (byte)1: // Cancel only, it is not called if !Config.isItemTransferOutBlocked()
+						event.setCancelled(true);
+						break;
 					case (byte)2: // Extra action - HopperMinecart removal
+						event.setCancelled(true);
 						((HopperMinecart)event.getDestination().getHolder()).remove();
 						break;
 					}
