@@ -49,7 +49,7 @@ public class BlockEnvironmentListener implements Listener{
 	
 	// Prevent piston break lock
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPistonExtend(BlockPistonRetractEvent event){
+	public void onPistonRetract(BlockPistonRetractEvent event){
 		// 1.8 +
 		for (Block block : event.getBlocks()){
 			if (LocketteProAPI.isProtected(block)){
