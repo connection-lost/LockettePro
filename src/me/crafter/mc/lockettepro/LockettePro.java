@@ -42,27 +42,42 @@ public class LockettePro extends JavaPlugin {
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, final String[] args){
     	if (cmd.getName().equals("lockettepro")){
-    		if (!(sender instanceof Player)) return false;
-    		Player player = (Player)sender;
     		if (args.length == 0){
-    	    	Utils.sendMessages(player, Config.getLang("command-usage"));
+    	    	Utils.sendMessages(sender, Config.getLang("command-usage"));
     		} else {
+    			// The following commands does not require player
     			switch (args[0]){
     			case "reload":
-    				if (player.hasPermission("lockettepro.reload")){
+    				if (sender.hasPermission("lockettepro.reload")){
     					Config.reload();
-    					Utils.sendMessages(player, Config.getLang("config-reloaded"));
+    					Utils.sendMessages(sender, Config.getLang("config-reloaded"));
     				} else {
-    					Utils.sendMessages(player, Config.getLang("no-permission"));
+    					Utils.sendMessages(sender, Config.getLang("no-permission"));
     				}
-    				break;
+    				return true;
+    			case "version":
+    				if (sender.hasPermission("lockettepro.version")){
+    					sender.sendMessage("[LockettePro] Plugin: " + plugin.getDescription().getFullName());
+    					sender.sendMessage("[LockettePro] Version: " + plugin.getDescription().getVersion());
+    				} else {
+    					Utils.sendMessages(sender, Config.getLang("no-permission"));
+    				}
+    				return true;
+    			}
+        		// The following commands requires player
+        		if (!(sender instanceof Player)){
+        	    	Utils.sendMessages(sender, Config.getLang("command-usage"));
+        			return false;
+        		}
+        		Player player = (Player)sender;
+    			switch (args[0]){
     			case "1":
     			case "2":
     			case "3":
     			case "4":
     				if (player.hasPermission("lockettepro.edit")){
     					if (args.length == 1){
-    				    	Utils.sendMessages(player, Config.getLang("howtoedit"));
+    				    	Utils.sendMessages(player, Config.getLang("command-usage"));
     					} else {
     		    			Block block = Utils.getSelectedSign(player);
     		    			if (block == null){
@@ -105,7 +120,6 @@ public class LockettePro extends JavaPlugin {
         		    				}
         		    			}
     		    			}
-    						
     					}
     				} else {
     					Utils.sendMessages(player, Config.getLang("no-permission"));
