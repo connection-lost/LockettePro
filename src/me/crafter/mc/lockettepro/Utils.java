@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
@@ -82,9 +83,9 @@ public class Utils {
 //		player.spigot().playEffect(block.getLocation().add(0.5, 0.5, 0.5), Effect.FLAME, 0, 0, 0.3F, 0.3F, 0.3F, 0.01F, 64, 64);
 	}
 	
-	public static void sendMessages(Player player, String messages){
+	public static void sendMessages(CommandSender sender, String messages){
 		if (messages == null || messages.equals("")) return;
-		player.sendMessage(messages);
+		sender.sendMessage(messages);
 	}
 
 	public static boolean shouldNotify(Player player){
