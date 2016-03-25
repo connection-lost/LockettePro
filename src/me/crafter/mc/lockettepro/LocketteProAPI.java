@@ -447,7 +447,7 @@ public class LocketteProAPI {
 	public static int getTimerOnSigns(Block block){
 		for (BlockFace blockface : newsfaces){
 			Block relative = block.getRelative(blockface);
-			if (isLockSignOrAdditionalSign(relative)){
+			if (isSign(relative)){
 				Sign sign = (Sign)relative.getState();
 				for (String line : sign.getLines()){
 					int linetime = Config.getTimer(line);
