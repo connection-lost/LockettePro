@@ -98,7 +98,9 @@ public class LockettePro extends JavaPlugin {
         		    				switch (args[0]){
         		        			case "1":
         		        			case "2":
-        		        				Utils.sendMessages(player, Config.getLang("cannot-change-this-line"));
+        		        				if (!player.hasPermission("lockettepro.admin.edit")){
+        		        					Utils.sendMessages(player, Config.getLang("cannot-change-this-line"));
+        		        				}
         		        				break;
         		        			case "3":
         		        			case "4":
