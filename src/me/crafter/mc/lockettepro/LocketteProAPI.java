@@ -235,6 +235,14 @@ public class LocketteProAPI {
 	
 	public static boolean isLockable(Block block){
 		Material material = block.getType();
+		//Bad blocks
+		switch (material){
+		case SIGN:
+		case WALL_SIGN:
+			return false;
+		default:
+			break;
+		}
 		if (Config.isLockable(material)){ // Directly lockable
 			return true;
 		} else { // Indirectly lockable
