@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
@@ -63,7 +62,7 @@ public class Dependency {
 						if (!player.hasPermission("lockettepro.towny.wilder")) return true;
 					}
 				}
-			} catch (NotRegisteredException e) {}
+			} catch (Exception e) {}
 		}
 		return false;
 	}
@@ -76,7 +75,7 @@ public class Dependency {
 				if (line.equals("[" + town.getName() + "]")) return true;
 				Nation nation = town.getNation();
 				if (line.equals("[" + nation.getName() + "]")) return true;
-			} catch (NotRegisteredException e) {}
+			} catch (Exception e) {}
 		}
 		return false;
 	}
