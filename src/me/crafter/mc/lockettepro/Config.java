@@ -20,6 +20,7 @@ public class Config {
 	private static Set<Material> lockables = new HashSet<Material>();
 	private static Set<String> privatestrings = new HashSet<String>();
 	private static Set<String> additionalstrings = new HashSet<String>();
+	private static Set<String> everyonestrings = new HashSet<String>();
 	private static Set<String> timerstrings = new HashSet<String>();
 	private static String defaultprivatestring = "[Private]";
 	private static String defaultadditionalstring = "[More Users]";
@@ -47,24 +48,30 @@ public class Config {
 		blockinterfereplacement = config.getBoolean("block-interfere-placement", true);
 		blockitemtransferin = config.getBoolean("block-item-transfer-in", false);
 		blockitemtransferout = config.getBoolean("block-item-transfer-out", true);
+		
 		List<String> privatestringlist = config.getStringList("private-signs");
 		List<String> additionalstringlist = config.getStringList("additional-signs");
+		List<String> everyonestringlist = config.getStringList("everyone-signs");
+		privatestrings = new HashSet<String>(privatestringlist);
+		additionalstrings = new HashSet<String>(additionalstringlist);
+		everyonestrings = new HashSet<String>(everyonestringlist);
+		defaultprivatestring = privatestringlist.get(0);
+		defaultadditionalstring = additionalstringlist.get(0);
+		
 		List<String> timerstringlist = config.getStringList("timer-signs");
 		List<String> timerstringlist2 = new ArrayList<String>();
+		for (String timerstring : timerstringlist){
+			if (timerstring.contains("@")) timerstringlist2.add(timerstring);
+		}
+		timerstrings = new HashSet<String>(timerstringlist2);
+
 		cachetime = config.getInt("cache-time-seconds", 0) * 1000;
 		cacheenabled = (config.getInt("cache-time-seconds", 0) > 0);
 		if (cacheenabled){
 			plugin.getLogger().info("You have cache enabled!");
 			plugin.getLogger().info("This is currently for experimental purpose only!");
 		}
-		for (String timerstring : timerstringlist){
-			if (timerstring.contains("@")) timerstringlist2.add(timerstring);
-		}
-		privatestrings = new HashSet<String>(privatestringlist);
-		additionalstrings = new HashSet<String>(additionalstringlist);
-		timerstrings = new HashSet<String>(timerstringlist2);
-		defaultprivatestring = privatestringlist.get(0);
-		defaultadditionalstring = additionalstringlist.get(0);
+		
 		String blockhopperminecartstring = config.getString("block-hopper-minecart", "remove");
 		switch (blockhopperminecartstring.toLowerCase()){
 		case "true":
@@ -148,6 +155,10 @@ public class Config {
 	
 	public static boolean isAdditionalSignString(String message){
 		return additionalstrings.contains(message);
+	}
+	
+	public static boolean isEveryoneSignString(String message){
+		return everyonestrings.contains(message);
 	}
 	
 	public static boolean isTimerSignString(String message){

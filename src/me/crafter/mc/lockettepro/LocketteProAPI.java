@@ -401,7 +401,9 @@ public class LocketteProAPI {
 	
 	public static boolean isUserOnSign(Block block, String name){ // Requires (isLockSign or isAdditionalSign)
 		String[] lines = ((Sign)block.getState()).getLines();
-		return name.equals(lines[1]) || name.equals(lines[2]) || name.equals(lines[3]);
+		return name.equals(lines[1]) || Config.isEveryoneSignString(lines[1]) ||
+				name.equals(lines[2]) || Config.isEveryoneSignString(lines[2]) ||
+				name.equals(lines[3]) || Config.isEveryoneSignString(lines[3]);
 	}
 	
 	public static boolean isUpDownLockedDoor(Block block){
