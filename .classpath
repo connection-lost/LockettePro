@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="E:/Dropbox/bukkit/plugins/worldguard-legacy-6.1.2-SNAPSHOT-dist.jar"/>
 	<classpathentry kind="lib" path="E:/Dropbox/bukkit/plugins/Residence.jar"/>
 	<classpathentry kind="lib" path="E:/Dropbox/bukkit/spigot-1.8-R0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="E:/Dropbox/bukkit/plugins/Towny.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

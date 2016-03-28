@@ -69,6 +69,11 @@ public class BlockPlayerListener implements Listener {
 		if (LocketteProAPI.isLockString(topline) || LocketteProAPI.isAdditionalString(topline)){
 			Block block = LocketteProAPI.getAttachedBlock(event.getBlock());
 			if (LocketteProAPI.isLockable(block)){
+				if (Dependency.isProtectedFrom(block, player)){ // External check here
+					event.setLine(0, Config.getLang("sign-error"));
+					Utils.sendMessages(player, Config.getLang("cannot-lock-manual"));
+					return; 
+				}
 				boolean locked = LocketteProAPI.isLocked(block);
 				if (!locked && !LocketteProAPI.isUpDownLockedDoor(block)){
 					if (LocketteProAPI.isLockString(topline)){

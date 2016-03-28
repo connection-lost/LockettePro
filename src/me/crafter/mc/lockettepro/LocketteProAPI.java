@@ -409,9 +409,21 @@ public class LocketteProAPI {
 	
 	public static boolean isUserOnSign(Block block, String name){ // Requires (isLockSign or isAdditionalSign)
 		String[] lines = ((Sign)block.getState()).getLines();
-		return name.equals(lines[1]) || Config.isEveryoneSignString(lines[1]) ||
+		// Normal
+		if (name.equals(lines[1]) || Config.isEveryoneSignString(lines[1]) ||
 				name.equals(lines[2]) || Config.isEveryoneSignString(lines[2]) ||
-				name.equals(lines[3]) || Config.isEveryoneSignString(lines[3]);
+				name.equals(lines[3]) || Config.isEveryoneSignString(lines[3])) {
+			return true;
+		}
+		// Towny extra
+		if (Dependency.towny != null){
+			if (Dependency.isTownyTownOrNationOf(lines[1], name) || 
+					Dependency.isTownyTownOrNationOf(lines[2], name) || 
+					Dependency.isTownyTownOrNationOf(lines[3], name)){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public static boolean isUpDownLockedDoor(Block block){
