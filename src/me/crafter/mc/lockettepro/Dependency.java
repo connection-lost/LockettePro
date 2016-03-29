@@ -59,7 +59,7 @@ public class Dependency {
 					}
 					// Wilderness permissions
 					if (TownyUniverse.isWilderness(block)){ // It is wilderness here
-						if (!player.hasPermission("lockettepro.towny.wilder")) return true;
+						if (!player.hasPermission("lockettepro.towny.wilds")) return true;
 					}
 				}
 			} catch (Exception e) {}
