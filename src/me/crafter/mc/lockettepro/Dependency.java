@@ -9,7 +9,9 @@ import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownBlock;
+import com.palmergames.bukkit.towny.object.TownyPermission.ActionType;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
+import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class Dependency {
@@ -42,6 +44,7 @@ public class Dependency {
 	    }
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static boolean isProtectedFrom(Block block, Player player){
 		if (worldguard != null){
 			if (!worldguard.canBuild(player, block)) return true;
@@ -53,10 +56,7 @@ public class Dependency {
 			try {
 				if (TownyUniverse.getDataSource().getWorld(block.getWorld().getName()).isUsingTowny()){
 					// In town only residents can
-					TownBlock townblock = TownyUniverse.getTownBlock(block.getLocation());
-					if (townblock != null && townblock.hasTown()){ // There is a town there
-						if (!townblock.getTown().hasResident(player.getName())) return true;
-					}
+					if (!PlayerCacheUtil.getCachePermission(player, block.getLocation(), block.getTypeId(), (byte) 0, ActionType.BUILD)) return true;
 					// Wilderness permissions
 					if (TownyUniverse.isWilderness(block)){ // It is wilderness here
 						if (!player.hasPermission("lockettepro.towny.wilds")) return true;
