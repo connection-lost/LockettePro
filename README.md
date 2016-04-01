@@ -1,6 +1,8 @@
 # LockettePro
 LockettePro - A much better Lockette plugin for Bukkit
 
+![McStats](http://i.mcstats.org/LockettePro/Global+Statistics.png "Statistics")
+
 LockettePro is a block-protection plugin based on Lockette (https://github.com/Acru/Lockette). It is 100% compatable with original Lockette, and the plugin behaviors are also 100% same.
 
 LockettePro has a lot of enhancements compared to Lockette:
