@@ -1,7 +1,12 @@
 package me.crafter.mc.lockettepro;
 
+import java.util.List;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -26,7 +31,6 @@ public class BlockDebugListener implements Listener {
 			p.sendMessage(" - isOwner/UserSingle: " + formatBoolean(LocketteProAPI.isOwnerSingleBlock(b, p.getName())) + ChatColor.RESET + "/" + formatBoolean(LocketteProAPI.isUserSingleBlock(b, p.getName())));
 			p.sendMessage("isLockedUpDownLockedDoor: " + formatBoolean(LocketteProAPI.isUpDownLockedDoor(b)));
 			p.sendMessage(" - isOwner/UserSingle: " + formatBoolean(LocketteProAPI.isOwnerUpDownLockedDoor(b, p.getName())) + ChatColor.RESET + "/" + formatBoolean(LocketteProAPI.isOwnerUpDownLockedDoor(b, p.getName())));
-
 			
 //			p.sendMessage("isLockSign: " + formatBoolean(LocketteProAPI.isLockSign(b)));
 //			if (LocketteProAPI.isLockSign(b)){
@@ -38,6 +42,30 @@ public class BlockDebugListener implements Listener {
 //			}
 //			p.sendMessage("isContainer: " + formatBoolean(LocketteProAPI.isContainer(b)));
 			p.sendMessage("BlockData: " + b.getData());
+			
+//			if (b.getType() == Material.WALL_SIGN){
+//				for (Object line : Reflection.signToBaseComponents(b)){
+//					Bukkit.broadcastMessage(line.toString());
+//				}
+//			}
+			if (b.getType() == Material.WALL_SIGN){
+//				List<Object> basecomponents = Reflection.signToBaseComponents(b);
+//				p.sendMessage("Text:Clickable:Hoverable");
+//				for (Object basecomponent : basecomponents){
+//					//p.sendMessage(ChatColor.RED + basecomponent.toString());
+//					p.sendMessage(ChatColor.YELLOW + Reflection.baseComponentToText(basecomponent) + ":" + Reflection.baseComponentToClickable(basecomponent) + ":" + Reflection.baseComponentToHoverable(basecomponent));
+//				}
+//				for (String line : ((Sign)b.getState()).getLines()){
+//					p.sendMessage(ChatColor.GREEN + line);
+//				}
+//				Object basecomponent = basecomponents.get(0);
+//				p.sendMessage(ChatColor.RED + basecomponent.toString());
+//				p.sendMessage(ChatColor.YELLOW + Reflection.baseComponentToText(basecomponent) + ":" + Reflection.baseComponentToClickable(basecomponent) + ":" + Reflection.baseComponentToHoverable(basecomponent));
+//				p.sendMessage(ChatColor.GREEN + ((Sign)b.getState()).getLines()[0]);
+				for (String line : ReflectionNBT.getSignLinesFull(b)){
+					Bukkit.broadcastMessage(line);
+				}
+			}
 		}	
 	}
 	

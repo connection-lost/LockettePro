@@ -2,6 +2,7 @@ package me.crafter.mc.lockettepro;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -12,17 +13,19 @@ import org.mcstats.Metrics;
 public class LockettePro extends JavaPlugin {
 
 	private static Plugin plugin;
+	private boolean debug = true;
 
 	public void onEnable(){
 		// Read config
 		new Config(this);
 		// Register Listeners
-    	//getServer().getPluginManager().registerEvents(new BlockDebugListener(), this);
+    	if (debug) getServer().getPluginManager().registerEvents(new BlockDebugListener(), this);
     	getServer().getPluginManager().registerEvents(new BlockPlayerListener(), this);
     	getServer().getPluginManager().registerEvents(new BlockEnvironmentListener(), this);
     	getServer().getPluginManager().registerEvents(new BlockInventoryMoveListener(), this);
     	// Dependency
     	new Dependency(this);
+    	new ReflectionNBT();
     	// Other
     	plugin = this;
     	// Metrics
@@ -130,6 +133,17 @@ public class LockettePro extends JavaPlugin {
     					Utils.sendMessages(player, Config.getLang("no-permission"));
     				}
     				break;
+    			case "force":
+    				if (debug && player.hasPermission("lockettepro.debug")){
+        				ReflectionNBT.setSignLine(Utils.getSelectedSign(player), Integer.parseInt(args[1]), args[2], args[3]);
+        				player.sendMessage("set");
+    					break;
+    				}
+    			case "update":
+    				if (debug && player.hasPermission("lockettepro.debug")){
+    					((Sign)Utils.getSelectedSign(player).getState()).update();
+        				break;
+    				}
     			default:
     		    	Utils.sendMessages(player, Config.getLang("command-usage"));
     				break;
