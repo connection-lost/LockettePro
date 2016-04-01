@@ -112,9 +112,7 @@ public class ReflectionNBT {
 			e.printStackTrace();
 		}
 	}
-	
-	//{\"extra\":[{\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"extra\":[\"hoverevent\"],\"text\":\"\"}},\"text\":\"line1\"}],\"text\":\"\"}
-	
+		
 	public static void setSignLinesFull(Block block, List<String> lines){
 		for (int l = 0; l < 4; l ++){
 			setSignLineFull(block, l, lines.get(l));
