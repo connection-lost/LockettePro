@@ -2,7 +2,6 @@ package me.crafter.mc.lockettepro;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -141,7 +140,7 @@ public class LockettePro extends JavaPlugin {
     				}
     			case "update":
     				if (debug && player.hasPermission("lockettepro.debug")){
-    					((Sign)Utils.getSelectedSign(player).getState()).update();
+    					Utils.updateSign(Utils.getSelectedSign(player));
         				break;
     				}
     			default:

@@ -65,6 +65,10 @@ public class Utils {
 		}
 	}
 	
+	public static void updateSign(Block block){
+		((Sign)block.getState()).update();
+	}
+	
 	public static Block getSelectedSign(Player player){
 		return selectedsign.get(player);
 	}
