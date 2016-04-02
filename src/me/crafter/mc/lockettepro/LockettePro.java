@@ -107,7 +107,7 @@ public class LockettePro extends JavaPlugin {
         		        				}
         		        			case "3":
         		        			case "4":
-        		        				Utils.setSignLine(block, Integer.parseInt(args[0]), message);
+        		        				Utils.setSignLine(block, Integer.parseInt(args[0])-1, message);
         		        				Utils.sendMessages(player, Config.getLang("sign-changed"));
         		        				break;
         		    				}
@@ -119,7 +119,7 @@ public class LockettePro extends JavaPlugin {
         		        			case "2":
         		        			case "3":
         		        			case "4":
-        		        				Utils.setSignLine(block, Integer.parseInt(args[0]), message);
+        		        				Utils.setSignLine(block, Integer.parseInt(args[0])-1, message);
         		        				Utils.sendMessages(player, Config.getLang("sign-changed"));
         		        				break;
         		    				}
