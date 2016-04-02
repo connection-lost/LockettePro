@@ -83,7 +83,7 @@ public class LockettePro extends JavaPlugin {
     		    			Block block = Utils.getSelectedSign(player);
     		    			if (block == null){
     		    				Utils.sendMessages(player, Config.getLang("no-sign-selected"));
-    		    			} else if (!LocketteProAPI.isSign(block) || !(player.hasPermission("lockettepro.edit.admin") || LocketteProAPI.isOwnerOfSign(block, player.getName()))){
+    		    			} else if (!LocketteProAPI.isSign(block) || !(player.hasPermission("lockettepro.edit.admin") || LocketteProAPI.isOwnerOfSign(block, player))){
     		    				Utils.sendMessages(player, Config.getLang("sign-need-reselect"));
     		    			} else {
     		    				String message = "";

@@ -43,11 +43,11 @@ public class BlockPlayerListener implements Listener {
 						Utils.sendMessages(player, Config.getLang("locked-quick"));
 						Utils.putSignOn(block, blockface, Config.getDefaultPrivateString(), player.getName());
 						Utils.resetCache(block);
-					} else if (!locked && LocketteProAPI.isOwnerUpDownLockedDoor(block, player.getName())){
+					} else if (!locked && LocketteProAPI.isOwnerUpDownLockedDoor(block, player)){
 						Utils.removeASign(player);
 						Utils.sendMessages(player, Config.getLang("additional-sign-added-quick"));
 						Utils.putSignOn(block, blockface, Config.getDefaultAdditionalString(), "");
-					} else if (LocketteProAPI.isOwner(block, player.getName())){
+					} else if (LocketteProAPI.isOwner(block, player)){
 						Utils.removeASign(player);
 						Utils.putSignOn(block, blockface, Config.getDefaultAdditionalString(), "");
 						Utils.sendMessages(player, Config.getLang("additional-sign-added-quick"));
@@ -84,14 +84,14 @@ public class BlockPlayerListener implements Listener {
 						Utils.sendMessages(player, Config.getLang("not-locked-yet-manual"));
 						event.setLine(0, Config.getLang("sign-error"));
 					}
-				} else if (!locked && LocketteProAPI.isOwnerUpDownLockedDoor(block, player.getName())){
+				} else if (!locked && LocketteProAPI.isOwnerUpDownLockedDoor(block, player)){
 					if (LocketteProAPI.isLockString(topline)){
 						Utils.sendMessages(player, Config.getLang("cannot-lock-door-nearby-manual"));
 						event.setLine(0, Config.getLang("sign-error"));
 					} else {
 						Utils.sendMessages(player, Config.getLang("additional-sign-added-manual"));
 					}
-				} else if (LocketteProAPI.isOwner(block, player.getName())){
+				} else if (LocketteProAPI.isOwner(block, player)){
 					if (LocketteProAPI.isLockString(topline)){
 						Utils.sendMessages(player, Config.getLang("block-already-locked-manual"));
 						event.setLine(0, Config.getLang("sign-error"));
@@ -118,7 +118,7 @@ public class BlockPlayerListener implements Listener {
 			Block block = event.getClickedBlock();
 			Player player = event.getPlayer();
 			if (!player.hasPermission("lockettepro.edit")) return;
-			if (LocketteProAPI.isOwnerOfSign(block, player.getName()) || (LocketteProAPI.isLockSign(block) && player.hasPermission("lockettepro.edit.admin"))){
+			if (LocketteProAPI.isOwnerOfSign(block, player) || (LocketteProAPI.isLockSign(block) && player.hasPermission("lockettepro.edit.admin"))){
 				Utils.selectSign(player, block);
 				Utils.sendMessages(player, Config.getLang("sign-selected"));
 				Utils.playLockEffect(player, block);
@@ -134,7 +134,7 @@ public class BlockPlayerListener implements Listener {
 		Player player = event.getPlayer();
 		if (player.hasPermission("lockettepro.admin.break")) return;
 		if (LocketteProAPI.isLockSign(block)){
-			if (LocketteProAPI.isOwnerOfSign(block, player.getName())){
+			if (LocketteProAPI.isOwnerOfSign(block, player)){
 				Utils.sendMessages(player, Config.getLang("break-own-lock-sign"));
 				Utils.resetCache(LocketteProAPI.getAttachedBlock(block));
 				// Remove additional signs?
@@ -144,7 +144,7 @@ public class BlockPlayerListener implements Listener {
 				Utils.playAccessDenyEffect(player, block);
 			}
 		} else if (LocketteProAPI.isAdditionalSign(block)){
-			if (LocketteProAPI.isOwnerOfSign(block, player.getName())){
+			if (LocketteProAPI.isOwnerOfSign(block, player)){
 				Utils.sendMessages(player, Config.getLang("break-own-additional-sign"));
 			} else if (!LocketteProAPI.isProtected(LocketteProAPI.getAttachedBlock(block))){
 				Utils.sendMessages(player, Config.getLang("break-redundant-additional-sign"));
@@ -180,8 +180,8 @@ public class BlockPlayerListener implements Listener {
 			Block block = event.getClickedBlock();
 			Player player = event.getPlayer();
 			if (!player.hasPermission("lockettepro.admin.use") && 
-					((LocketteProAPI.isLocked(block) && !LocketteProAPI.isUser(block, player.getName())) || 
-					(LocketteProAPI.isUpDownLockedDoor(block) && !LocketteProAPI.isUserUpDownLockedDoor(block, player.getName())))
+					((LocketteProAPI.isLocked(block) && !LocketteProAPI.isUser(block, player)) || 
+					(LocketteProAPI.isUpDownLockedDoor(block) && !LocketteProAPI.isUserUpDownLockedDoor(block, player)))
 					){
 				Utils.sendMessages(player, Config.getLang("block-is-locked"));
 				event.setCancelled(true);
@@ -225,7 +225,7 @@ public class BlockPlayerListener implements Listener {
 		Block block = event.getBlock();
 		Player player = event.getPlayer();
 		if (player.hasPermission("lockettepro.admin.interfere")) return;
-		if (LocketteProAPI.mayInterfere(block, player.getName())){
+		if (LocketteProAPI.mayInterfere(block, player)){
 			Utils.sendMessages(player, Config.getLang("cannot-interfere-with-others"));
 			event.setCancelled(true);
 			Utils.playAccessDenyEffect(player, block);		

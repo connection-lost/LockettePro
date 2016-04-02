@@ -23,11 +23,11 @@ public class BlockDebugListener implements Listener {
 			p.sendMessage(ChatColor.GREEN + "===========================");
 			p.sendMessage("isLockable: " + formatBoolean(LocketteProAPI.isLockable(b)));
 			p.sendMessage("isLocked: " + formatBoolean(LocketteProAPI.isLocked(b)));
-			p.sendMessage(" - isOwner/User: " + formatBoolean(LocketteProAPI.isOwner(b, p.getName())) + ChatColor.RESET + "/" + formatBoolean(LocketteProAPI.isUser(b, p.getName())));
+			p.sendMessage(" - isOwner/User: " + formatBoolean(LocketteProAPI.isOwner(b, p)) + ChatColor.RESET + "/" + formatBoolean(LocketteProAPI.isUser(b, p)));
 			p.sendMessage("isLockedSingle: " + formatBoolean(LocketteProAPI.isLockedSingleBlock(b)));
-			p.sendMessage(" - isOwner/UserSingle: " + formatBoolean(LocketteProAPI.isOwnerSingleBlock(b, p.getName())) + ChatColor.RESET + "/" + formatBoolean(LocketteProAPI.isUserSingleBlock(b, p.getName())));
+			p.sendMessage(" - isOwner/UserSingle: " + formatBoolean(LocketteProAPI.isOwnerSingleBlock(b, p)) + ChatColor.RESET + "/" + formatBoolean(LocketteProAPI.isUserSingleBlock(b, p)));
 			p.sendMessage("isLockedUpDownLockedDoor: " + formatBoolean(LocketteProAPI.isUpDownLockedDoor(b)));
-			p.sendMessage(" - isOwner/UserSingle: " + formatBoolean(LocketteProAPI.isOwnerUpDownLockedDoor(b, p.getName())) + ChatColor.RESET + "/" + formatBoolean(LocketteProAPI.isOwnerUpDownLockedDoor(b, p.getName())));
+			p.sendMessage(" - isOwner/UserSingle: " + formatBoolean(LocketteProAPI.isOwnerUpDownLockedDoor(b, p)) + ChatColor.RESET + "/" + formatBoolean(LocketteProAPI.isOwnerUpDownLockedDoor(b, p)));
 			
 //			p.sendMessage("isLockSign: " + formatBoolean(LocketteProAPI.isLockSign(b)));
 //			if (LocketteProAPI.isLockSign(b)){
