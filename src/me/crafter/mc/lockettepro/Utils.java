@@ -44,16 +44,12 @@ public class Utils {
 			return;
 		}
 		newsign.setData(data, true);
-		Sign signstate = (Sign)newsign.getState();
-		signstate.setLine(0, line1);
-		signstate.setLine(1, line2);
-		signstate.update();
+		setSignLine(newsign, 0, line1);
+		setSignLine(newsign, 1, line2);
 	}
 	
-	public static void setSignLine(Block block, int line, String message){ // Requires isSign
-		Sign signstate = (Sign)block.getState();
-		signstate.setLine(line-1, message);
-		signstate.update();
+	public static void setSignLine(Block block, int line, String text){ // Requires isSign
+		ReflectionNBT.setSignLineFull(block, line, text);
 	}
 	
 	public static void removeASign(Player player){
