@@ -18,7 +18,6 @@ public class LocketteProAPI {
 	
 	public static boolean isLocked(Block block){
 		switch (block.getType()){
-		// Regular Doors - No need, default is okay
 		// Double Doors
 		case WOODEN_DOOR:
 		case SPRUCE_DOOR:
@@ -64,7 +63,6 @@ public class LocketteProAPI {
 	
 	public static boolean isOwner(Block block, Player player){
 		switch (block.getType()){
-		// Regular Doors - No need, default is okay
 		// Double Doors
 		case WOODEN_DOOR:
 		case SPRUCE_DOOR:
@@ -110,7 +108,6 @@ public class LocketteProAPI {
 
 	public static boolean isUser(Block block, Player player){
 		switch (block.getType()){
-		// Regular Doors - No need, default is okay
 		// Double Doors
 		case WOODEN_DOOR:
 		case SPRUCE_DOOR:
@@ -217,28 +214,6 @@ public class LocketteProAPI {
 			if (blockup != null && isUpDownAlsoLockableBlock(blockup)) return true;
 			Block blockdown = block.getRelative(BlockFace.DOWN);
 			if (blockdown != null && isUpDownAlsoLockableBlock(blockdown)) return true;
-			return false;
-		}
-	}
-	
-	@Deprecated
-	public static boolean isLockableBlock(Block block){
-		switch (block.getType()){
-		case CHEST:
-		case TRAPPED_CHEST:
-		case FURNACE:
-		case HOPPER:
-		case BREWING_STAND:
-		case DIAMOND_BLOCK:
-		case WOODEN_DOOR:
-		case SPRUCE_DOOR:
-		case BIRCH_DOOR:
-		case JUNGLE_DOOR:
-		case ACACIA_DOOR:
-		case DARK_OAK_DOOR:
-		case IRON_DOOR_BLOCK:
-			return true;
-		default:
 			return false;
 		}
 	}
