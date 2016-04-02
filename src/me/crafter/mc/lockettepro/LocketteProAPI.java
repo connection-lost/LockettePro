@@ -38,10 +38,10 @@ public class LocketteProAPI {
 					if (isLockedSingleBlock(relative0.getRelative(BlockFace.DOWN), doorface.getOppositeFace())) return true; 
 				}
 			}
-			if (isLockedSingleBlock(doors[1].getRelative(BlockFace.UP))) return true;
-			if (isLockedSingleBlock(doors[1])) return true;
-			if (isLockedSingleBlock(doors[0])) return true; 
-			if (isLockedSingleBlock(doors[0].getRelative(BlockFace.DOWN))) return true;
+			if (isLockedSingleBlock(doors[1].getRelative(BlockFace.UP), null)) return true;
+			if (isLockedSingleBlock(doors[1], null)) return true;
+			if (isLockedSingleBlock(doors[0], null)) return true; 
+			if (isLockedSingleBlock(doors[0].getRelative(BlockFace.DOWN), null)) return true;
 			break;
 		// Chests (Second block only)
 		case CHEST:
@@ -56,7 +56,7 @@ public class LocketteProAPI {
 			// Don't break here
 		// Everything else (First block of container check goes here)
 		default:
-			if (isLockedSingleBlock(block)) return true; 
+			if (isLockedSingleBlock(block, null)) return true; 
 			break;
 		}
 		return false;
@@ -84,10 +84,10 @@ public class LocketteProAPI {
 					if (isOwnerSingleBlock(relative0.getRelative(BlockFace.DOWN), doorface.getOppositeFace(), player)) return true; 
 				}
 			}
-			if (isOwnerSingleBlock(doors[1].getRelative(BlockFace.UP), player)) return true;
-			if (isOwnerSingleBlock(doors[1], player)) return true;
-			if (isOwnerSingleBlock(doors[0], player)) return true; 
-			if (isOwnerSingleBlock(doors[0].getRelative(BlockFace.DOWN), player)) return true;
+			if (isOwnerSingleBlock(doors[1].getRelative(BlockFace.UP), null, player)) return true;
+			if (isOwnerSingleBlock(doors[1], null, player)) return true;
+			if (isOwnerSingleBlock(doors[0], null, player)) return true; 
+			if (isOwnerSingleBlock(doors[0].getRelative(BlockFace.DOWN), null, player)) return true;
 			break;
 		// Chests (Second block only)
 		case CHEST:
@@ -102,7 +102,7 @@ public class LocketteProAPI {
 			// Don't break here
 		// Everything else (First block of container check goes here)
 		default:
-			if (isOwnerSingleBlock(block, player)) return true; 
+			if (isOwnerSingleBlock(block, null, player)) return true; 
 			break;
 		}
 		return false;
@@ -130,10 +130,10 @@ public class LocketteProAPI {
 					if (isUserSingleBlock(relative0.getRelative(BlockFace.DOWN), doorface.getOppositeFace(), player)) return true; 
 				}
 			}
-			if (isUserSingleBlock(doors[1].getRelative(BlockFace.UP), player)) return true;
-			if (isUserSingleBlock(doors[1], player)) return true;
-			if (isUserSingleBlock(doors[0], player)) return true; 
-			if (isUserSingleBlock(doors[0].getRelative(BlockFace.DOWN), player)) return true;
+			if (isUserSingleBlock(doors[1].getRelative(BlockFace.UP), null, player)) return true;
+			if (isUserSingleBlock(doors[1], null, player)) return true;
+			if (isUserSingleBlock(doors[0], null, player)) return true; 
+			if (isUserSingleBlock(doors[0].getRelative(BlockFace.DOWN), null, player)) return true;
 			break;
 		// Chests (Second block only)
 		case CHEST:
@@ -148,7 +148,7 @@ public class LocketteProAPI {
 			// Don't break here
 		// Everything else (First block of container check goes here)
 		default:
-			if (isUserSingleBlock(block, player)) return true; 
+			if (isUserSingleBlock(block, null, player)) return true; 
 			break;
 		}
 		return false;
@@ -156,16 +156,6 @@ public class LocketteProAPI {
 	
 	public static boolean isProtected(Block block){
 		return (isLockSign(block) || isLocked(block) || isUpDownLockedDoor(block));
-	}
-	
-	public static boolean isLockedSingleBlock(Block block){
-		for (BlockFace blockface : newsfaces){
-			Block relativeblock = block.getRelative(blockface);
-			if (isLockSign(relativeblock) && (((org.bukkit.material.Sign)relativeblock.getState().getData()).getFacing() == blockface)){
-				return true;
-			}
-		}
-		return false;
 	}
 	
 	public static boolean isLockedSingleBlock(Block block, BlockFace exempt){
@@ -179,36 +169,12 @@ public class LocketteProAPI {
 		return false;
 	}
 	
-	public static boolean isOwnerSingleBlock(Block block, Player player){ // Requires isLocked
-		for (BlockFace blockface : newsfaces){
-			Block relativeblock = block.getRelative(blockface);
-			if (isLockSign(relativeblock) && (((org.bukkit.material.Sign)relativeblock.getState().getData()).getFacing() == blockface)){
-				if (isOwnerOnSign(relativeblock, player)){
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
 	public static boolean isOwnerSingleBlock(Block block, BlockFace exempt, Player player){ // Requires isLocked
 		for (BlockFace blockface : newsfaces){
 			if (blockface == exempt) continue;
 			Block relativeblock = block.getRelative(blockface);
 			if (isLockSign(relativeblock) && (((org.bukkit.material.Sign)relativeblock.getState().getData()).getFacing() == blockface)){
 				if (isOwnerOnSign(relativeblock, player)){
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
-	public static boolean isUserSingleBlock(Block block, Player player){ // Requires isLocked
-		for (BlockFace blockface : newsfaces){
-			Block relativeblock = block.getRelative(blockface);
-			if (isLockSignOrAdditionalSign(relativeblock) && (((org.bukkit.material.Sign)relativeblock.getState().getData()).getFacing() == blockface)){
-				if (isUserOnSign(relativeblock, player)){
 					return true;
 				}
 			}
@@ -350,7 +316,7 @@ public class LocketteProAPI {
 				switch (newblock.getType()){
 				case CHEST:
 				case TRAPPED_CHEST:
-					if (isLockedSingleBlock(newblock) && !isOwnerSingleBlock(newblock, player)){
+					if (isLockedSingleBlock(newblock, null) && !isOwnerSingleBlock(newblock, null, player)){
 						return true;
 					}
 				default:
@@ -371,7 +337,7 @@ public class LocketteProAPI {
 				case HOPPER:
 				case DISPENSER:
 				case DROPPER:
-					if (isLockedSingleBlock(newblock) && !isOwnerSingleBlock(newblock, player)){
+					if (isLockedSingleBlock(newblock, null) && !isOwnerSingleBlock(newblock, null, player)){
 						return true;
 					}
 				default:

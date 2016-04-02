@@ -69,3 +69,43 @@ if (LockItAPI.isLockString(topline)){
 				event.setLine(0, ChatColor.DARK_RED + "[ERROR]");
 			}
 		}
+		
+		
+LocketteProAPI.java
+
+	@Deprecated
+	public static boolean isLockedSingleBlock(Block block){
+		for (BlockFace blockface : newsfaces){
+			Block relativeblock = block.getRelative(blockface);
+			if (isLockSign(relativeblock) && (((org.bukkit.material.Sign)relativeblock.getState().getData()).getFacing() == blockface)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Deprecated
+	public static boolean isOwnerSingleBlock(Block block, Player player){ // Requires isLocked
+		for (BlockFace blockface : newsfaces){
+			Block relativeblock = block.getRelative(blockface);
+			if (isLockSign(relativeblock) && (((org.bukkit.material.Sign)relativeblock.getState().getData()).getFacing() == blockface)){
+				if (isOwnerOnSign(relativeblock, player)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	@Deprecated
+	public static boolean isUserSingleBlock(Block block, Player player){ // Requires isLocked
+		for (BlockFace blockface : newsfaces){
+			Block relativeblock = block.getRelative(blockface);
+			if (isLockSignOrAdditionalSign(relativeblock) && (((org.bukkit.material.Sign)relativeblock.getState().getData()).getFacing() == blockface)){
+				if (isUserOnSign(relativeblock, player)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
