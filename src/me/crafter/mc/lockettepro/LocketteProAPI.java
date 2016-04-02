@@ -296,6 +296,7 @@ public class LocketteProAPI {
 	}
 	
 	public static boolean mayInterfere(Block block, Player player){
+		// if LEFT may interfere RIGHT
 		switch (block.getType()){
 		case WOODEN_DOOR:
 		case SPRUCE_DOOR:
@@ -342,6 +343,8 @@ public class LocketteProAPI {
 			// End temp workaround bad code for checking up and down signs
 		case CHEST:
 		case TRAPPED_CHEST:
+		case WALL_SIGN:
+		case SIGN_POST:
 			for (BlockFace blockface : allfaces){
 				Block newblock = block.getRelative(blockface);
 				switch (newblock.getType()){
@@ -355,10 +358,10 @@ public class LocketteProAPI {
 				}
 			}
 			break;
+		// This is extra interfere block
 		case HOPPER:
 		case DISPENSER:
 		case DROPPER:
-		// This is extra interfere block
 			if (!Config.isInterferePlacementBlocked()) return false;
 			for (BlockFace blockface : allfaces){
 				Block newblock = block.getRelative(blockface);
