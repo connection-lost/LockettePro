@@ -1,3 +1,4 @@
+language-file-name: 'lang.yml'
 enable-quick-protect: true
 block-interfere-placement: true
 block-item-transfer-in: false

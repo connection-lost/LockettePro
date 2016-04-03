@@ -17,6 +17,7 @@ public class Config {
 	private static Plugin plugin;
 	private static FileConfiguration config;
 	private static FileConfiguration lang;
+	private static String langfilename = "lang.yml";
 	private static Set<Material> lockables = new HashSet<Material>();
 	private static Set<String> privatestrings = new HashSet<String>();
 	private static Set<String> additionalstrings = new HashSet<String>();
@@ -42,7 +43,8 @@ public class Config {
 		plugin.saveDefaultConfig();
 		initAdditionalFiles();
 		config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "config.yml"));
-		lang = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "lang.yml"));
+		langfilename = config.getString("language-file-name", "lang.yml");
+		lang = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), langfilename));
 		String enablequickprotectstring = config.getString("enable-quick-protect", "true");
 		switch (enablequickprotectstring.toLowerCase()){
 		case "true":
@@ -142,9 +144,12 @@ public class Config {
 	}
 	
 	public static void initAdditionalFiles(){
-		File langfile = new File(plugin.getDataFolder(), "lang.yml");
-		if (!langfile.exists()){
-			plugin.saveResource("lang.yml", false);
+		String[] availablefiles = {"lang.yml", "lang_zh-cn.yml", "lang_es.yml"};
+		for (String filename : availablefiles){
+			File langfile = new File(plugin.getDataFolder(), filename);
+			if (!langfile.exists()){
+				plugin.saveResource(filename, false);
+			}
 		}
 	}
 

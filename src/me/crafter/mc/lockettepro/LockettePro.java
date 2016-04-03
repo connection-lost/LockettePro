@@ -33,7 +33,6 @@ public class LockettePro extends JavaPlugin {
     	} catch (Exception ex){}
     }
 	
-	
     public void onDisable(){
     }
     
