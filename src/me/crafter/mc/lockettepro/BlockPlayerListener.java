@@ -25,10 +25,12 @@ public class BlockPlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerQuickLockChest(PlayerInteractEvent event){
 		if (event.isCancelled()) return;
-		if (!Config.isQuickProtectEnabled()) return;
+		if (Config.getQuickProtectAction() == (byte)0) return;
 		Action action = event.getAction();
 		Player player = event.getPlayer();
-		if (action == Action.RIGHT_CLICK_BLOCK && player.getItemInHand().getType() == Material.SIGN && !player.isSneaking()){
+		if (action == Action.RIGHT_CLICK_BLOCK && player.getItemInHand().getType() == Material.SIGN){
+			if (!((event.getPlayer().isSneaking() && Config.getQuickProtectAction() == (byte)2) ||
+					(!event.getPlayer().isSneaking() && Config.getQuickProtectAction() == (byte)1))) return;
 			if (!player.hasPermission("lockettepro.lock")) return;
 			BlockFace blockface = event.getBlockFace();
 			if (blockface == BlockFace.NORTH || blockface == BlockFace.WEST || blockface == BlockFace.EAST || blockface == BlockFace.SOUTH){
@@ -240,10 +242,14 @@ public class BlockPlayerListener implements Listener {
 		Player player = event.getPlayer();
 		if (!player.hasPermission("lockettepro.lock")) return;
 		if (Utils.shouldNotify(player) && Config.isLockable(block.getType())){
-			if (Config.isQuickProtectEnabled()){
-				Utils.sendMessages(player, Config.getLang("you-can-quick-lock-it"));	
-			} else {
+			switch (Config.getQuickProtectAction()){
+			case (byte)0:
 				Utils.sendMessages(player, Config.getLang("you-can-manual-lock-it"));	
+				break;
+			case (byte)1:
+			case (byte)2:
+				Utils.sendMessages(player, Config.getLang("you-can-quick-lock-it"));	
+				break;
 			}
 		}
 	}

@@ -24,14 +24,13 @@ public class Config {
 	private static Set<String> timerstrings = new HashSet<String>();
 	private static String defaultprivatestring = "[Private]";
 	private static String defaultadditionalstring = "[More Users]";
-	private static boolean enablequickprotect = true;
+	private static byte enablequickprotect = (byte)1;
 	private static boolean blockinterfereplacement = true;
 	private static boolean blockitemtransferin = false;
 	private static boolean blockitemtransferout = false;
 	private static int cachetime = 0;
 	private static boolean cacheenabled = false;
 	private static byte blockhopperminecart = 0;
-	
 	
 	public Config(Plugin _plugin){
 		plugin = _plugin;
@@ -44,7 +43,21 @@ public class Config {
 		initAdditionalFiles();
 		config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "config.yml"));
 		lang = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "lang.yml"));
-		enablequickprotect = config.getBoolean("enable-quick-protect", true);
+		String enablequickprotectstring = config.getString("enable-quick-protect", "true");
+		switch (enablequickprotectstring.toLowerCase()){
+		case "true":
+			enablequickprotect = 1;
+			break;
+		case "false":
+			enablequickprotect = 0;
+			break;
+		case "sneak":
+			enablequickprotect = 2;
+			break;
+		default:
+			enablequickprotect = 1;
+			break;
+		}
 		blockinterfereplacement = config.getBoolean("block-interfere-placement", true);
 		blockitemtransferin = config.getBoolean("block-item-transfer-in", false);
 		blockitemtransferout = config.getBoolean("block-item-transfer-out", true);
@@ -135,7 +148,7 @@ public class Config {
 		}
 	}
 
-	public static boolean isQuickProtectEnabled() {return enablequickprotect;}
+	public static byte getQuickProtectAction() {return enablequickprotect;}
 	public static boolean isInterferePlacementBlocked() {return blockinterfereplacement;}
 	public static boolean isItemTransferInBlocked() {return blockitemtransferin;}
 	public static boolean isItemTransferOutBlocked() {return blockitemtransferout;}
