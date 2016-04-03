@@ -1,6 +1,5 @@
 package me.crafter.mc.lockettepro;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -59,9 +58,6 @@ public class BlockDebugListener implements Listener {
 //				p.sendMessage(ChatColor.RED + basecomponent.toString());
 //				p.sendMessage(ChatColor.YELLOW + Reflection.baseComponentToText(basecomponent) + ":" + Reflection.baseComponentToClickable(basecomponent) + ":" + Reflection.baseComponentToHoverable(basecomponent));
 //				p.sendMessage(ChatColor.GREEN + ((Sign)b.getState()).getLines()[0]);
-				for (String line : ReflectionNBT.getSignLinesFull(b)){
-					Bukkit.broadcastMessage(line);
-				}
 			}
 		}	
 	}

@@ -31,8 +31,6 @@ public class ReflectionNBT {
 		}
 	}
 	
-
-
 	public static String[] getSignLinesFull(Block block){
 		World world = block.getWorld();
 		Location location = block.getLocation();
@@ -121,6 +119,10 @@ public class ReflectionNBT {
 	
 	public static void setSignLine(Block block, int line, String text, String hover){
 		setSignLineFull(block, line, "{\"extra\":[{\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"extra\":[\"" + hover + "\"],\"text\":\"\"}},\"text\":\"" + text + "\"}],\"text\":\"\"}");
+	}
+	
+	public static void setSignLine(Block block, int line, String text){
+		setSignLineFull(block, line, "{\"extra\":[\"" + text + "\"],\"text\":\"\"}");
 	}
 	
 }

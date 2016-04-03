@@ -24,7 +24,6 @@ public class LockettePro extends JavaPlugin {
     	getServer().getPluginManager().registerEvents(new BlockInventoryMoveListener(), this);
     	// Dependency
     	new Dependency(this);
-    	new ReflectionNBT();
     	// Other
     	plugin = this;
     	// Metrics
@@ -134,8 +133,7 @@ public class LockettePro extends JavaPlugin {
     				break;
     			case "force":
     				if (debug && player.hasPermission("lockettepro.debug")){
-        				ReflectionNBT.setSignLine(Utils.getSelectedSign(player), Integer.parseInt(args[1]), args[2], args[3]);
-        				player.sendMessage("set");
+        				Utils.setSignLine(Utils.getSelectedSign(player), Integer.parseInt(args[1]), args[2]);
     					break;
     				}
     			case "update":
