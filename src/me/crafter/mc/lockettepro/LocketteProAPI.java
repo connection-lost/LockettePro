@@ -7,7 +7,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.material.MaterialData;
 import org.bukkit.material.Openable;
 
@@ -203,6 +202,7 @@ public class LocketteProAPI {
 		switch (material){
 		case SIGN:
 		case WALL_SIGN:
+		case SIGN_POST:
 			return false;
 		default:
 			break;
@@ -393,10 +393,6 @@ public class LocketteProAPI {
 		Block blockdown = block.getRelative(BlockFace.DOWN);
 		if (blockdown != null && isUpDownAlsoLockableBlock(blockdown) && isUser(blockdown, player)) return true;
 		return false;
-	}
-	
-	public static boolean isContainer(Block block){
-		return block.getState() instanceof InventoryHolder;
 	}
 	
 	public static boolean isLockString(String line){

@@ -36,7 +36,7 @@ public class BlockEnvironmentListener implements Listener{
 		}
 	}
 
-	// Prevent piston break lock
+	// Prevent piston extend break lock
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPistonExtend(BlockPistonExtendEvent event){
 		for (Block block : event.getBlocks()){
@@ -47,21 +47,15 @@ public class BlockEnvironmentListener implements Listener{
 		}
 	}
 	
-	// Prevent piston break lock
+	// Prevent piston retract break lock
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPistonRetract(BlockPistonRetractEvent event){
-		// 1.8 +
 		for (Block block : event.getBlocks()){
 			if (LocketteProAPI.isProtected(block)){
 				event.setCancelled(true);
 				return;
 			}
 		}
-		// 1.7
-//		if (LocketteProAPI.isProtected(event.getBlock())){
-//			event.setCancelled(true);
-//			return;
-//		}
 	}
 	
 	// Prevent redstone current open doors
