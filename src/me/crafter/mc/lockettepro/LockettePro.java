@@ -17,7 +17,7 @@ import com.comphenix.protocol.events.PacketAdapter;
 public class LockettePro extends JavaPlugin {
 
 	private static Plugin plugin;
-	private boolean debug = true;
+	private boolean debug = false;
 	public ProtocolSignPacketListener protocolsignpacketlistener;
 
 	public void onEnable(){
@@ -123,6 +123,9 @@ public class LockettePro extends JavaPlugin {
         		        			case "4":
         		        				Utils.setSignLine(block, Integer.parseInt(args[0])-1, message);
         		        				Utils.sendMessages(player, Config.getLang("sign-changed"));
+        		        				if (Config.isUuidEnabled()){
+        		        					Utils.updateUuidByUsername(Utils.getSelectedSign(player), Integer.parseInt(args[0])-1);
+        		        				}
         		        				break;
         		    				}
         		    			} else if (LocketteProAPI.isAdditionalSign(block)){
@@ -135,6 +138,9 @@ public class LockettePro extends JavaPlugin {
         		        			case "4":
         		        				Utils.setSignLine(block, Integer.parseInt(args[0])-1, message);
         		        				Utils.sendMessages(player, Config.getLang("sign-changed"));
+        		        				if (Config.isUuidEnabled()){
+        		        					Utils.updateUuidByUsername(Utils.getSelectedSign(player), Integer.parseInt(args[0])-1);
+        		        				}
         		        				break;
         		    				}
         		    			} else {

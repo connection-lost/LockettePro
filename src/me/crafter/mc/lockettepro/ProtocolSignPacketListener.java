@@ -12,6 +12,7 @@ public class ProtocolSignPacketListener extends PacketAdapter{
 	/*  This class is a ProtocolLib packet listener. It is used to modify packets from a lock sign.
 	 *  Whenever a lock sign conatining username with UUID (eg. "user#uuid-uuid-xxxxxx"), this
 	 *  class will prevent the uuid from sending to the client, making the sign human readable.
+	 *  This class will not be loaded if UUID support is turned off.
 	 */
 	
 	public ProtocolSignPacketListener(AdapterParameteters params) {

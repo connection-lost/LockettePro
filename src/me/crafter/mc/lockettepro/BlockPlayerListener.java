@@ -45,6 +45,9 @@ public class BlockPlayerListener implements Listener {
 						Utils.sendMessages(player, Config.getLang("locked-quick"));
 						Utils.putSignOn(block, blockface, Config.getDefaultPrivateString(), player.getName());
 						Utils.resetCache(block);
+						if (Config.isUuidEnabled()){
+        					Utils.updateUuidByUsername(Utils.getSelectedSign(player), 1);
+        				}
 					} else if (!locked && LocketteProAPI.isOwnerUpDownLockedDoor(block, player)){
 						Utils.removeASign(player);
 						Utils.sendMessages(player, Config.getLang("additional-sign-added-quick"));
