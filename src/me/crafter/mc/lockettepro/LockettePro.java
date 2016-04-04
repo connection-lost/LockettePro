@@ -9,10 +9,16 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.ListenerPriority;
+import com.comphenix.protocol.events.PacketAdapter;
+
 public class LockettePro extends JavaPlugin {
 
 	private static Plugin plugin;
 	private boolean debug = true;
+	public ProtocolSignPacketListener protocolsignpacketlistener;
 
 	public void onEnable(){
 		// Read config
@@ -22,6 +28,15 @@ public class LockettePro extends JavaPlugin {
     	getServer().getPluginManager().registerEvents(new BlockPlayerListener(), this);
     	getServer().getPluginManager().registerEvents(new BlockEnvironmentListener(), this);
     	getServer().getPluginManager().registerEvents(new BlockInventoryMoveListener(), this);
+    	if (Config.isUuidEnabled()){
+            PacketAdapter.AdapterParameteters params = new PacketAdapter.AdapterParameteters();
+            params.plugin(this);
+            params.serverSide();
+            params.types(new PacketType[] { PacketType.Play.Server.UPDATE_SIGN });
+            params.listenerPriority(ListenerPriority.LOW);
+            protocolsignpacketlistener = new ProtocolSignPacketListener(params);
+            ProtocolLibrary.getProtocolManager().addPacketListener(protocolsignpacketlistener);
+    	}
     	// Dependency
     	new Dependency(this);
     	// Other
@@ -34,6 +49,7 @@ public class LockettePro extends JavaPlugin {
     }
 	
     public void onDisable(){
+    	ProtocolLibrary.getProtocolManager().removePacketListener(protocolsignpacketlistener);
     }
     
     public static Plugin getPlugin(){
@@ -138,6 +154,11 @@ public class LockettePro extends JavaPlugin {
     			case "update":
     				if (debug && player.hasPermission("lockettepro.debug")){
     					Utils.updateSign(Utils.getSelectedSign(player));
+        				break;
+    				}
+    			case "uuid":
+    				if (debug && player.hasPermission("lockettepro.debug")){
+    					Utils.updateUuidOnSign(Utils.getSelectedSign(player));
         				break;
     				}
     			default:

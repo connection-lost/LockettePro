@@ -341,33 +341,31 @@ public class LocketteProAPI {
 	public static boolean isLockSignOrAdditionalSign(Block block){
 		if (isSign(block)){
 			String line = ((Sign)block.getState()).getLine(0);
-			return isLockString(line) || isAdditionalString(line);
+			return isLockStringOrAdditionalString(line);
 		} else {
 			return false;
 		}
 	}
 	
 	public static boolean isOwnerOnSign(Block block, Player player){ // Requires isLockSign
-		String name = player.getName();
 		String[] lines = ((Sign)block.getState()).getLines();
-		return name.equals(lines[1]);
+		return Utils.isPlayerOnLine(player, lines[1]);
 	}
 	
 	public static boolean isUserOnSign(Block block, Player player){ // Requires (isLockSign or isAdditionalSign)
-		String name = player.getName();
 		String[] lines = ((Sign)block.getState()).getLines();
 		// Normal
-		if (name.equals(lines[1]) || Config.isEveryoneSignString(lines[1]) ||
-				name.equals(lines[2]) || Config.isEveryoneSignString(lines[2]) ||
-				name.equals(lines[3]) || Config.isEveryoneSignString(lines[3])) {
-			return true;
+		for (int i = 1; i < 4; i ++){
+			if (Utils.isPlayerOnLine(player, lines[i]) || Config.isEveryoneSignString(lines[i])){
+				Utils.updateLineByPlayer(block, i, player);
+				return true;
+			}
 		}
 		// Towny extra
 		if (Dependency.towny != null){
-			if (Dependency.isTownyTownOrNationOf(lines[1], name) || 
-					Dependency.isTownyTownOrNationOf(lines[2], name) || 
-					Dependency.isTownyTownOrNationOf(lines[3], name)){
-				return true;
+			String name = player.getName();
+			for (int i = 1; i < 4; i ++){
+				if (Dependency.isTownyTownOrNationOf(lines[1], name)) return true;
 			}
 		}
 		return false;
@@ -407,6 +405,10 @@ public class LocketteProAPI {
 	
 	public static boolean isAdditionalString(String line){
 		return Config.isAdditionalSignString(line);
+	}
+	
+	public static boolean isLockStringOrAdditionalString(String line){
+		return isLockString(line) || isAdditionalString(line);
 	}
 
 	public static Block getAttachedBlock(Block sign){ // Requires isSign

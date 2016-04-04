@@ -1,1 +1,2 @@
 1. Optimize getUser() so that it won't need isLocked() beforehand.
+2. Admin cannot auto update sign uuid

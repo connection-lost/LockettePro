@@ -3,6 +3,7 @@ package me.crafter.mc.lockettepro;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -51,14 +52,16 @@ public class BlockDebugListener implements Listener {
 //					//p.sendMessage(ChatColor.RED + basecomponent.toString());
 //					p.sendMessage(ChatColor.YELLOW + Reflection.baseComponentToText(basecomponent) + ":" + Reflection.baseComponentToClickable(basecomponent) + ":" + Reflection.baseComponentToHoverable(basecomponent));
 //				}
-//				for (String line : ((Sign)b.getState()).getLines()){
-//					p.sendMessage(ChatColor.GREEN + line);
-//				}
+				for (String line : ((Sign)b.getState()).getLines()){
+					p.sendMessage(ChatColor.GREEN + line);
+				}
 //				Object basecomponent = basecomponents.get(0);
 //				p.sendMessage(ChatColor.RED + basecomponent.toString());
 //				p.sendMessage(ChatColor.YELLOW + Reflection.baseComponentToText(basecomponent) + ":" + Reflection.baseComponentToClickable(basecomponent) + ":" + Reflection.baseComponentToHoverable(basecomponent));
 //				p.sendMessage(ChatColor.GREEN + ((Sign)b.getState()).getLines()[0]);
 			}
+			p.sendMessage(p.getUniqueId().toString());
+			//p.sendMessage(Utils.getUuidByUsernameFromMojang(p.getName()));
 		}	
 	}
 	
