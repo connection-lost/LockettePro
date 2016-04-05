@@ -24,16 +24,15 @@ public class LockettePro extends JavaPlugin {
 		// Read config
 		new Config(this);
 		// Register Listeners
+		// If debug mode is not on, debug listener won't register
     	if (debug) getServer().getPluginManager().registerEvents(new BlockDebugListener(), this);
     	getServer().getPluginManager().registerEvents(new BlockPlayerListener(), this);
     	getServer().getPluginManager().registerEvents(new BlockEnvironmentListener(), this);
     	getServer().getPluginManager().registerEvents(new BlockInventoryMoveListener(), this);
+    	// If UUID is not enabled, UUID listener won't register
     	if (Config.isUuidEnabled()){
             PacketAdapter.AdapterParameteters params = new PacketAdapter.AdapterParameteters();
-            params.plugin(this);
-            params.serverSide();
-            params.types(new PacketType[] { PacketType.Play.Server.UPDATE_SIGN });
-            params.listenerPriority(ListenerPriority.LOW);
+            params.plugin(this).serverSide().types(new PacketType[] { PacketType.Play.Server.UPDATE_SIGN }).listenerPriority(ListenerPriority.LOW);
             protocolsignpacketlistener = new ProtocolSignPacketListener(params);
             ProtocolLibrary.getProtocolManager().addPacketListener(protocolsignpacketlistener);
     	}

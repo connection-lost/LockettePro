@@ -349,7 +349,11 @@ public class LocketteProAPI {
 	
 	public static boolean isOwnerOnSign(Block block, Player player){ // Requires isLockSign
 		String[] lines = ((Sign)block.getState()).getLines();
-		return Utils.isPlayerOnLine(player, lines[1]);
+		if (Utils.isPlayerOnLine(player, lines[1])){
+			Utils.updateLineByPlayer(block, 1, player);
+			return true;
+		}
+		return false;
 	}
 	
 	public static boolean isUserOnSign(Block block, Player player){ // Requires (isLockSign or isAdditionalSign)

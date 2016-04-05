@@ -46,7 +46,7 @@ public class BlockPlayerListener implements Listener {
 						Utils.putSignOn(block, blockface, Config.getDefaultPrivateString(), player.getName());
 						Utils.resetCache(block);
 						if (Config.isUuidEnabled()){
-        					Utils.updateUuidByUsername(Utils.getSelectedSign(player), 1);
+        					Utils.updateLineByPlayer(block.getRelative(blockface), 1, player);
         				}
 					} else if (!locked && LocketteProAPI.isOwnerUpDownLockedDoor(block, player)){
 						Utils.removeASign(player);
@@ -184,10 +184,9 @@ public class BlockPlayerListener implements Listener {
 		case RIGHT_CLICK_BLOCK:
 			Block block = event.getClickedBlock();
 			Player player = event.getPlayer();
-			if (!player.hasPermission("lockettepro.admin.use") && 
-					((LocketteProAPI.isLocked(block) && !LocketteProAPI.isUser(block, player)) || 
+			if (((LocketteProAPI.isLocked(block) && !LocketteProAPI.isUser(block, player)) || 
 					(LocketteProAPI.isUpDownLockedDoor(block) && !LocketteProAPI.isUserUpDownLockedDoor(block, player)))
-					){
+					&& !player.hasPermission("lockettepro.admin.use")){
 				Utils.sendMessages(player, Config.getLang("block-is-locked"));
 				event.setCancelled(true);
 				Utils.playAccessDenyEffect(player, block);
