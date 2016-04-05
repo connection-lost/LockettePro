@@ -1,5 +1,6 @@
 package me.crafter.mc.lockettepro;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -31,10 +32,15 @@ public class LockettePro extends JavaPlugin {
     	getServer().getPluginManager().registerEvents(new BlockInventoryMoveListener(), this);
     	// If UUID is not enabled, UUID listener won't register
     	if (Config.isUuidEnabled()){
-            PacketAdapter.AdapterParameteters params = new PacketAdapter.AdapterParameteters();
-            params.plugin(this).serverSide().types(new PacketType[] { PacketType.Play.Server.UPDATE_SIGN }).listenerPriority(ListenerPriority.LOW);
-            protocolsignpacketlistener = new ProtocolSignPacketListener(params);
-            ProtocolLibrary.getProtocolManager().addPacketListener(protocolsignpacketlistener);
+    		if (Bukkit.getPluginManager().getPlugin("ProtocolLib") != null){
+    			PacketAdapter.AdapterParameteters params = new PacketAdapter.AdapterParameteters();
+                params.plugin(this).serverSide().types(new PacketType[] { PacketType.Play.Server.UPDATE_SIGN }).listenerPriority(ListenerPriority.LOW);
+                protocolsignpacketlistener = new ProtocolSignPacketListener(params);
+                ProtocolLibrary.getProtocolManager().addPacketListener(protocolsignpacketlistener);
+    		} else {
+    			this.getLogger().info("ProtocolLib is not found!");
+    			this.getLogger().info("UUID support requires ProtocolLib. Or else signs will be ugly!");
+    		}
     	}
     	// Dependency
     	new Dependency(this);
