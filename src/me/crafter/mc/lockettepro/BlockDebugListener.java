@@ -38,7 +38,7 @@ public class BlockDebugListener implements Listener {
 //				p.sendMessage(" - isUserOnSign: " + formatBoolean(LocketteProAPI.isUserOnSign(b, p.getName())));
 //			}
 //			p.sendMessage("isContainer: " + formatBoolean(LocketteProAPI.isContainer(b)));
-			p.sendMessage("BlockData: " + b.getData());
+			p.sendMessage("Block: " + b.getType().toString() + " " + b.getTypeId() + ":" + b.getData());
 			
 //			if (b.getType() == Material.WALL_SIGN){
 //				for (Object line : Reflection.signToBaseComponents(b)){
