@@ -39,7 +39,7 @@ public class LockettePro extends JavaPlugin {
                 ProtocolLibrary.getProtocolManager().addPacketListener(protocolsignpacketlistener);
     		} else {
     			this.getLogger().info("ProtocolLib is not found!");
-    			this.getLogger().info("UUID support requires ProtocolLib. Or else signs will be ugly!");
+    			this.getLogger().info("UUID support requires ProtocolLib, or else signs will be ugly!");
     		}
     	}
     	// Dependency
@@ -54,7 +54,9 @@ public class LockettePro extends JavaPlugin {
     }
 	
     public void onDisable(){
-    	ProtocolLibrary.getProtocolManager().removePacketListener(protocolsignpacketlistener);
+		if (Config.isUuidEnabled() && Bukkit.getPluginManager().getPlugin("ProtocolLib") != null){
+	    	ProtocolLibrary.getProtocolManager().removePacketListener(protocolsignpacketlistener);
+		}
     }
     
     public static Plugin getPlugin(){
