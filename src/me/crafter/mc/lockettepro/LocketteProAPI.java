@@ -350,7 +350,9 @@ public class LocketteProAPI {
 	public static boolean isOwnerOnSign(Block block, Player player){ // Requires isLockSign
 		String[] lines = ((Sign)block.getState()).getLines();
 		if (Utils.isPlayerOnLine(player, lines[1])){
-			Utils.updateLineByPlayer(block, 1, player);
+			if (Config.isUuidEnabled()){
+				Utils.updateLineByPlayer(block, 1, player);
+			}
 			return true;
 		}
 		return false;
@@ -361,7 +363,9 @@ public class LocketteProAPI {
 		// Normal
 		for (int i = 1; i < 4; i ++){
 			if (Utils.isPlayerOnLine(player, lines[i]) || Config.isEveryoneSignString(lines[i])){
-				Utils.updateLineByPlayer(block, i, player);
+				if (Config.isUuidEnabled()){
+					Utils.updateLineByPlayer(block, i, player);
+				}
 				return true;
 			}
 		}
@@ -369,7 +373,7 @@ public class LocketteProAPI {
 		if (Dependency.towny != null){
 			String name = player.getName();
 			for (int i = 1; i < 4; i ++){
-				if (Dependency.isTownyTownOrNationOf(lines[1], name)) return true;
+				if (Dependency.isTownyTownOrNationOf(lines[i], name)) return true;
 			}
 		}
 		return false;
