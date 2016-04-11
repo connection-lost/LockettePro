@@ -10,10 +10,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
-import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
 
 public class LockettePro extends JavaPlugin {
 
@@ -32,15 +29,7 @@ public class LockettePro extends JavaPlugin {
     	getServer().getPluginManager().registerEvents(new BlockInventoryMoveListener(), this);
     	// If UUID is not enabled, UUID listener won't register
     	if (Config.isUuidEnabled()){
-    		if (Bukkit.getPluginManager().getPlugin("ProtocolLib") != null){
-    			PacketAdapter.AdapterParameteters params = new PacketAdapter.AdapterParameteters();
-                params.plugin(this).serverSide().types(new PacketType[] { PacketType.Play.Server.UPDATE_SIGN }).listenerPriority(ListenerPriority.LOW);
-                protocolsignpacketlistener = new ProtocolSignPacketListener(params);
-                ProtocolLibrary.getProtocolManager().addPacketListener(protocolsignpacketlistener);
-    		} else {
-    			this.getLogger().info("ProtocolLib is not found!");
-    			this.getLogger().info("UUID support requires ProtocolLib, or else signs will be ugly!");
-    		}
+    		Dependency.setUpProtocolLib(this);
     	}
     	// Dependency
     	new Dependency(this);
@@ -55,7 +44,7 @@ public class LockettePro extends JavaPlugin {
 	
     public void onDisable(){
 		if (Config.isUuidEnabled() && Bukkit.getPluginManager().getPlugin("ProtocolLib") != null){
-	    	ProtocolLibrary.getProtocolManager().removePacketListener(protocolsignpacketlistener);
+	    	ProtocolLibrary.getProtocolManager().removePacketListeners(this);
 		}
     }
     
