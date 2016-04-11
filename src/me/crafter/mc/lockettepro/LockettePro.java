@@ -10,15 +10,13 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
-import com.comphenix.protocol.ProtocolLibrary;
-
 public class LockettePro extends JavaPlugin {
 
 	private static Plugin plugin;
 	private boolean debug = false;
-	public ProtocolSignPacketListener protocolsignpacketlistener;
 
 	public void onEnable(){
+    	plugin = this;
 		// Read config
 		new Config(this);
 		// Register Listeners
@@ -29,12 +27,15 @@ public class LockettePro extends JavaPlugin {
     	getServer().getPluginManager().registerEvents(new BlockInventoryMoveListener(), this);
     	// If UUID is not enabled, UUID listener won't register
     	if (Config.isUuidEnabled()){
-    		Dependency.setUpProtocolLib(this);
+			if (Bukkit.getPluginManager().getPlugin("ProtocolLib") != null){
+	    		DependencyProtocolLib.setUpProtocolLib(this);
+			} else {
+				plugin.getLogger().info("ProtocolLib is not found!");
+				plugin.getLogger().info("UUID support requires ProtocolLib, or else signs will be ugly!");
+			}
     	}
     	// Dependency
     	new Dependency(this);
-    	// Other
-    	plugin = this;
     	// Metrics
     	try {
     		Metrics metrics = new Metrics(this);
@@ -44,7 +45,7 @@ public class LockettePro extends JavaPlugin {
 	
     public void onDisable(){
 		if (Config.isUuidEnabled() && Bukkit.getPluginManager().getPlugin("ProtocolLib") != null){
-	    	ProtocolLibrary.getProtocolManager().removePacketListeners(this);
+			DependencyProtocolLib.cleanUpProtocolLib(this);
 		}
     }
     

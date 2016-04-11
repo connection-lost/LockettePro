@@ -1,15 +1,10 @@
 package me.crafter.mc.lockettepro;
 
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
@@ -82,18 +77,6 @@ public class Dependency {
 			} catch (Exception e) {}
 		}
 		return false;
-	}
-	
-	public static void setUpProtocolLib(Plugin plugin){
-		if (Bukkit.getPluginManager().getPlugin("ProtocolLib") != null){
-			PacketAdapter.AdapterParameteters params = new PacketAdapter.AdapterParameteters();
-            params.plugin(plugin).serverSide().types(new PacketType[] { PacketType.Play.Server.UPDATE_SIGN }).listenerPriority(ListenerPriority.LOW);
-            ProtocolSignPacketListener protocolsignpacketlistener = new ProtocolSignPacketListener(params);
-            ProtocolLibrary.getProtocolManager().addPacketListener(protocolsignpacketlistener);
-		} else {
-			plugin.getLogger().info("ProtocolLib is not found!");
-			plugin.getLogger().info("UUID support requires ProtocolLib, or else signs will be ugly!");
-		}
 	}
 
 }
