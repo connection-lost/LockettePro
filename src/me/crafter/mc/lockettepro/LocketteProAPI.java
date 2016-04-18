@@ -193,7 +193,12 @@ public class LocketteProAPI {
 	
 	public static boolean isOwnerOfSign(Block block, Player player){ // Requires isSign
 		Block protectedblock = getAttachedBlock(block);
-		return isOwner(protectedblock, player);
+		// Normal situation, that block is just locked by an adjacent sign
+		if (isOwner(protectedblock, player)) return true;
+		// Situation where double door's block
+		if (isUpDownLockedDoor(protectedblock) && isOwnerUpDownLockedDoor(protectedblock, player)) return true;
+		// Otherwise...
+		return false;
 	}
 	
 	public static boolean isLockable(Block block){
