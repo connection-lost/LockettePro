@@ -5,6 +5,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.massivecraft.factions.entity.BoardColl;
+import com.massivecraft.factions.entity.Faction;
+import com.massivecraft.factions.entity.MPlayer;
+import com.massivecraft.massivecore.ps.PS;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
@@ -18,6 +22,7 @@ public class Dependency {
 	protected static WorldGuardPlugin worldguard = null;
 	protected static Plugin residence = null;
 	protected static Plugin towny = null;
+	protected static Plugin factions = null;
 	
 	public Dependency(Plugin plugin){
 		// WorldGuard
@@ -41,6 +46,13 @@ public class Dependency {
 	    } else {
 	    	towny = townyplugin;
 	    }
+		// Factions
+	    Plugin factionsplugin = plugin.getServer().getPluginManager().getPlugin("Factions");
+	    if (factionsplugin == null){
+	    	factions = null;
+	    } else {
+	    	factions = factionsplugin;
+	    }
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -63,17 +75,43 @@ public class Dependency {
 				}
 			} catch (Exception e) {}
 		}
+		if (factions != null){
+			try {
+				Faction faction = BoardColl.get().getFactionAt(PS.valueOf(block));
+				if (faction != null){
+					MPlayer mplayer = MPlayer.get(player);
+					if (mplayer != null){
+						Faction playerfaction = mplayer.getFaction();
+						if (faction != playerfaction){
+							return true;
+						}
+					}
+				}
+			} catch (Exception e){}
+		}
 		return false;
 	}
 	
-	public static boolean isTownyTownOrNationOf(String line, String name){
+	public static boolean isTownyTownOrNationOf(String line, Player player){
 		if (towny != null){
+			String name = player.getName();
 			try {
 				Resident resident = TownyUniverse.getDataSource().getResident(name);
 				Town town = resident.getTown();
 				if (line.equals("[" + town.getName() + "]")) return true;
 				Nation nation = town.getNation();
 				if (line.equals("[" + nation.getName() + "]")) return true;
+			} catch (Exception e) {}
+		}
+		if (factions != null){
+			try {
+				MPlayer mplayer = MPlayer.get(player);
+				if (mplayer != null){
+					Faction faction = mplayer.getFaction();
+					if (faction != null){
+						if (line.equals("[" + faction.getName() + "]")) return true;
+					}
+				}
 			} catch (Exception e) {}
 		}
 		return false;

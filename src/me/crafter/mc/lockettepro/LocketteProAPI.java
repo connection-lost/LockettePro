@@ -374,12 +374,9 @@ public class LocketteProAPI {
 				return true;
 			}
 		}
-		// Towny extra
-		if (Dependency.towny != null){
-			String name = player.getName();
-			for (int i = 1; i < 4; i ++){
-				if (Dependency.isTownyTownOrNationOf(lines[i], name)) return true;
-			}
+		// For Towny & Factions
+		for (int i = 1; i < 4; i ++){
+			if (Dependency.isTownyTownOrNationOf(lines[i], player)) return true;
 		}
 		return false;
 	}
