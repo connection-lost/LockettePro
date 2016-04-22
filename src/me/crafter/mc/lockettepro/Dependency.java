@@ -78,7 +78,7 @@ public class Dependency {
 		if (factions != null){
 			try {
 				Faction faction = BoardColl.get().getFactionAt(PS.valueOf(block));
-				if (faction != null && !faction.getName().contains("Wilderness")){
+				if (faction != null && !faction.isNone()){
 					MPlayer mplayer = MPlayer.get(player);
 					if (mplayer != null){
 						Faction playerfaction = mplayer.getFaction();
