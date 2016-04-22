@@ -33,26 +33,11 @@ public class Dependency {
 	    	worldguard = (WorldGuardPlugin)worldguardplugin;
 	    }
 	    // Residence
-	    Plugin residenceplugin = plugin.getServer().getPluginManager().getPlugin("Residence");
-	    if (residenceplugin == null){
-	    	residence = null;
-	    } else {
-	    	residence = residenceplugin;
-	    }
+	    residence = plugin.getServer().getPluginManager().getPlugin("Residence");
 	    // Towny
-	    Plugin townyplugin = plugin.getServer().getPluginManager().getPlugin("Towny");
-	    if (townyplugin == null){
-	    	towny = null;
-	    } else {
-	    	towny = townyplugin;
-	    }
+	    towny = plugin.getServer().getPluginManager().getPlugin("Towny");
 		// Factions
-	    Plugin factionsplugin = plugin.getServer().getPluginManager().getPlugin("Factions");
-	    if (factionsplugin == null){
-	    	factions = null;
-	    } else {
-	    	factions = factionsplugin;
-	    }
+	    factions = plugin.getServer().getPluginManager().getPlugin("Factions");
 	}
 	
 	@SuppressWarnings("deprecation")
