@@ -317,7 +317,7 @@ public class LocketteProAPI {
 				case HOPPER:
 				case DISPENSER:
 				case DROPPER:
-					if (isLockedSingleBlock(newblock, null) && !isOwnerSingleBlock(newblock, null, player)){
+					if (isLocked(newblock) && !isOwner(newblock, player)){
 						return true;
 					}
 				default:
