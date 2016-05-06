@@ -65,7 +65,7 @@ public class Dependency {
 				Faction faction = BoardColl.get().getFactionAt(PS.valueOf(block));
 				if (faction != null && !faction.isNone()){
 					MPlayer mplayer = MPlayer.get(player);
-					if (mplayer != null){
+					if (mplayer != null && !mplayer.isOverriding()){
 						Faction playerfaction = mplayer.getFaction();
 						if (faction != playerfaction){
 							return true;
