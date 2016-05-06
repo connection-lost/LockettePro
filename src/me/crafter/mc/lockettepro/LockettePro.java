@@ -14,6 +14,7 @@ public class LockettePro extends JavaPlugin {
 
 	private static Plugin plugin;
 	private boolean debug = false;
+	private static boolean is19 = false;
 
 	public void onEnable(){
     	plugin = this;
@@ -41,6 +42,11 @@ public class LockettePro extends JavaPlugin {
     		Metrics metrics = new Metrics(this);
 	        metrics.start();
     	} catch (Exception ex){}
+    	if (Bukkit.getServer().getClass().getPackage().getName().contains("v1_8")){
+    		is19 = false;
+    	} else {
+    		is19 = true;
+    	}
     }
 	
     public void onDisable(){
@@ -51,6 +57,10 @@ public class LockettePro extends JavaPlugin {
     
     public static Plugin getPlugin(){
     	return plugin;
+    }
+    
+    public static boolean is19(){
+    	return is19;
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, final String[] args){

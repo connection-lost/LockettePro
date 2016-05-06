@@ -17,6 +17,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.material.Openable;
 
 public class BlockPlayerListener implements Listener {
@@ -179,7 +180,9 @@ public class BlockPlayerListener implements Listener {
 	// Protect block from being used & handle double doors
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onAttemptInteractLockedBlocks(PlayerInteractEvent event){
-		if (event.isCancelled()) return;
+		if (LockettePro.is19()){
+			if (event.getHand() != EquipmentSlot.HAND) return;
+		}
 		Action action = event.getAction();
 		switch (action){
 		case LEFT_CLICK_BLOCK:
