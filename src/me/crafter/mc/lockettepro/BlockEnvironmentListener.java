@@ -16,7 +16,7 @@ import org.bukkit.event.world.StructureGrowEvent;
 public class BlockEnvironmentListener implements Listener{
 
 	// Prevent explosion break block
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onEntityExplode(EntityExplodeEvent event){
 		Iterator<Block> it = event.blockList().iterator();
         while (it.hasNext()) {
@@ -26,7 +26,7 @@ public class BlockEnvironmentListener implements Listener{
 	}
 	
 	// Prevent tree break block
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onStructureGrow(StructureGrowEvent event){
 		for (BlockState blockstate : event.getBlocks()){
 			if (LocketteProAPI.isProtected(blockstate.getBlock())){
@@ -37,7 +37,7 @@ public class BlockEnvironmentListener implements Listener{
 	}
 
 	// Prevent piston extend break lock
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onPistonExtend(BlockPistonExtendEvent event){
 		for (Block block : event.getBlocks()){
 			if (LocketteProAPI.isProtected(block)){
@@ -48,7 +48,7 @@ public class BlockEnvironmentListener implements Listener{
 	}
 	
 	// Prevent piston retract break lock
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onPistonRetract(BlockPistonRetractEvent event){
 		for (Block block : event.getBlocks()){
 			if (LocketteProAPI.isProtected(block)){
@@ -59,7 +59,7 @@ public class BlockEnvironmentListener implements Listener{
 	}
 	
 	// Prevent redstone current open doors
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockRedstoneChange(BlockRedstoneEvent event){
 		if (LocketteProAPI.isProtected(event.getBlock())){
 			event.setNewCurrent(event.getOldCurrent());

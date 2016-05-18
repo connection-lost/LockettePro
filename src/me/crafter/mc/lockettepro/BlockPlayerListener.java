@@ -23,7 +23,7 @@ import org.bukkit.material.Openable;
 public class BlockPlayerListener implements Listener {
 
 	// Quick protect for chests
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerQuickLockChest(PlayerInteractEvent event){
 		if (event.isCancelled()) return;
 		if (Config.getQuickProtectAction() == (byte)0) return;
@@ -66,7 +66,7 @@ public class BlockPlayerListener implements Listener {
 	}
 	
 	// Manual protection
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onManualLock(SignChangeEvent event){
 		if (event.getBlock().getType() != Material.WALL_SIGN) return;
 		String topline = event.getLine(0);
@@ -135,7 +135,7 @@ public class BlockPlayerListener implements Listener {
 	}
 	
 	// Player break sign
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onAttemptBreakSign(BlockBreakEvent event){
 		if (event.isCancelled()) return;
 		Block block = event.getBlock();
@@ -165,7 +165,7 @@ public class BlockPlayerListener implements Listener {
 	}
 	
 	// Protect block from being destroyed
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onAttemptBreakLockedBlocks(BlockBreakEvent event){
 		if (event.isCancelled()) return;
 		Block block = event.getBlock();
@@ -178,7 +178,7 @@ public class BlockPlayerListener implements Listener {
 	}
 
 	// Protect block from being used & handle double doors
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onAttemptInteractLockedBlocks(PlayerInteractEvent event){
 		if (LockettePro.is19()){
 			if (event.getHand() != EquipmentSlot.HAND) return;
@@ -228,7 +228,7 @@ public class BlockPlayerListener implements Listener {
 	}
 	
 	// Protect block from interfere block
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onAttemptPlaceInterfereBlocks(BlockPlaceEvent event){
 		if (event.isCancelled()) return;
 		Block block = event.getBlock();
