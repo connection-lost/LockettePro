@@ -456,7 +456,7 @@ public class LocketteProAPI {
 		if (doors0 > 0) return doors0;
 		int doors1 = getTimerOnSigns(doors[1]);
 		if (doors1 > 0) return doors1;
-		Block relativedown = doors[1].getRelative(BlockFace.DOWN);
+		Block relativedown = doors[0].getRelative(BlockFace.DOWN);
 		int relativedowntimer = getTimerOnSigns(relativedown);
 		if (relativedowntimer > 0) return relativedowntimer;
 		return 0;
