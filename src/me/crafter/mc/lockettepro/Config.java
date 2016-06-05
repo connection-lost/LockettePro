@@ -30,6 +30,7 @@ public class Config {
 	private static boolean blockinterfereplacement = true;
 	private static boolean blockitemtransferin = false;
 	private static boolean blockitemtransferout = false;
+	private static boolean disableexplosionprotection = false;
 	private static int cachetime = 0;
 	private static boolean cacheenabled = false;
 	private static byte blockhopperminecart = 0;
@@ -65,6 +66,7 @@ public class Config {
 		blockinterfereplacement = config.getBoolean("block-interfere-placement", true);
 		blockitemtransferin = config.getBoolean("block-item-transfer-in", false);
 		blockitemtransferout = config.getBoolean("block-item-transfer-out", true);
+		disableexplosionprotection = config.getBoolean("disable-explosion-protection", false);
 		
 		List<String> privatestringlist = config.getStringList("private-signs");
 		List<String> additionalstringlist = config.getStringList("additional-signs");
@@ -183,6 +185,10 @@ public class Config {
 	
 	public static boolean isEveryoneSignString(String message){
 		return everyonestrings.contains(message);
+	}
+	
+	public static boolean isExplosionProtectionDisabled(){
+		return disableexplosionprotection;
 	}
 	
 	public static boolean isTimerSignString(String message){

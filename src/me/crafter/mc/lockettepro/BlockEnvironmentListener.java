@@ -18,6 +18,7 @@ public class BlockEnvironmentListener implements Listener{
 	// Prevent explosion break block
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onEntityExplode(EntityExplodeEvent event){
+		if (Config.isExplosionProtectionDisabled()) return;
 		Iterator<Block> it = event.blockList().iterator();
         while (it.hasNext()) {
             Block block = it.next();
