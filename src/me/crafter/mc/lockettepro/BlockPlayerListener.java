@@ -71,7 +71,13 @@ public class BlockPlayerListener implements Listener {
 		if (event.getBlock().getType() != Material.WALL_SIGN) return;
 		String topline = event.getLine(0);
 		Player player = event.getPlayer();
-		if (!player.hasPermission("lockettepro.lock")) return;
+		if (!player.hasPermission("lockettepro.lock")){
+			if (LocketteProAPI.isLockString(topline) || LocketteProAPI.isAdditionalString(topline)){
+				event.setLine(0, Config.getLang("sign-error"));
+				Utils.sendMessages(player, Config.getLang("cannot-lock-manual"));
+			}
+			return;
+		}
 		if (LocketteProAPI.isLockString(topline) || LocketteProAPI.isAdditionalString(topline)){
 			Block block = LocketteProAPI.getAttachedBlock(event.getBlock());
 			if (LocketteProAPI.isLockable(block)){
