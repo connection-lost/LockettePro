@@ -7,6 +7,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
@@ -18,6 +19,16 @@ public class BlockEnvironmentListener implements Listener{
 	// Prevent explosion break block
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onEntityExplode(EntityExplodeEvent event){
+		if (Config.isExplosionProtectionDisabled()) return;
+		Iterator<Block> it = event.blockList().iterator();
+        while (it.hasNext()) {
+            Block block = it.next();
+            if (LocketteProAPI.isProtected(block)) it.remove();
+        }
+	}
+	
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onBlockExplode(BlockExplodeEvent event){
 		if (Config.isExplosionProtectionDisabled()) return;
 		Iterator<Block> it = event.blockList().iterator();
         while (it.hasNext()) {
