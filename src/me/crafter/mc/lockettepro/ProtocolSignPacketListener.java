@@ -43,7 +43,7 @@ public class ProtocolSignPacketListener extends PacketAdapter{
 					}
 				} catch (Exception ex){}
 			}
-		} else {
+		} else { // 1.9
 			if (packet.getType() == PacketType.Play.Server.TILE_ENTITY_DATA){
 				if (packet.getIntegers().read(0) == 9){
 					try {

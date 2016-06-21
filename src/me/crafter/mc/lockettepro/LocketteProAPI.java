@@ -367,10 +367,12 @@ public class LocketteProAPI {
 		String[] lines = ((Sign)block.getState()).getLines();
 		// Normal
 		for (int i = 1; i < 4; i ++){
-			if (Utils.isPlayerOnLine(player, lines[i]) || Config.isEveryoneSignString(lines[i])){
+			if (Utils.isPlayerOnLine(player, lines[i])){
 				if (Config.isUuidEnabled()){
 					Utils.updateLineByPlayer(block, i, player);
 				}
+				return true;
+			} else if (Config.isEveryoneSignString(lines[i])) {
 				return true;
 			}
 		}
