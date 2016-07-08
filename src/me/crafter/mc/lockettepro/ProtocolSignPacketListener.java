@@ -24,7 +24,8 @@ public class ProtocolSignPacketListener extends PacketAdapter{
 	@Override
 	public void onPacketSending(PacketEvent event){
 		PacketContainer packet = event.getPacket();
-		if (!LockettePro.is19()){ // Legacy 1.8
+		switch (LockettePro.getBukkitVersion()){
+		case v1_8_R1:
 			if (packet.getType() == PacketType.Play.Server.UPDATE_SIGN){
 				try {
 					boolean modified = false;
@@ -43,7 +44,9 @@ public class ProtocolSignPacketListener extends PacketAdapter{
 					}
 				} catch (Exception ex){}
 			}
-		} else { // 1.9
+			break;
+		case v1_9_R1:
+		case v1_9_R2:
 			if (packet.getType() == PacketType.Play.Server.TILE_ENTITY_DATA){
 				if (packet.getIntegers().read(0) == 9){
 					try {
@@ -66,8 +69,16 @@ public class ProtocolSignPacketListener extends PacketAdapter{
 					}
 				}
 			}
+			// TODO initial
+			break;
+		case v1_10_R1:
+			// TODO 1.10
+			
+			break;
+		case UNKNOWN:
+		default:
+			break;
 		}
-		
 	}
 	
 	public static String getSignLineFromUnknown(WrappedChatComponent rawline){

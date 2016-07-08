@@ -186,7 +186,7 @@ public class BlockPlayerListener implements Listener {
 	// Protect block from being used & handle double doors
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onAttemptInteractLockedBlocks(PlayerInteractEvent event){
-		if (LockettePro.is19()){
+		if (LockettePro.needCheckHand()){
 			if (event.getHand() != EquipmentSlot.HAND) return;
 		}
 		Action action = event.getAction();
