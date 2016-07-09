@@ -1,3 +1,48 @@
+		try {
+			boolean modified = false;
+			WrappedChatComponent[] lines = packet.getChatComponentArrays().read(0);
+			if (LocketteProAPI.isLockStringOrAdditionalString(getSignLineFromUnknown(lines[0]))){
+				for (int i = 1; i < 4; i ++){
+					String line = getSignLineFromUnknown(lines[i]);
+					if (Utils.isUsernameUuidLine(line)){
+						lines[i] = WrappedChatComponent.fromText(Utils.getUsernameFromLine(line));
+						modified = true;
+					}
+				}
+			}
+			if (modified){
+				packet.getChatComponentArrays().write(0, lines);
+			}
+		} catch (Exception ex){
+			ex.printStackTrace();
+		}
+
+
+
+
+			if (packet.getType() == PacketType.Play.Server.UPDATE_SIGN){
+				try {
+					boolean modified = false;
+					WrappedChatComponent[] lines = packet.getChatComponentArrays().read(0);
+					if (LocketteProAPI.isLockStringOrAdditionalString(getSignLineFromUnknown(lines[0]))){
+						for (int i = 1; i < 4; i ++){
+							String line = getSignLineFromUnknown(lines[i]);
+							if (Utils.isUsernameUuidLine(line)){
+								lines[i] = WrappedChatComponent.fromText(Utils.getUsernameFromLine(line));
+								modified = true;
+							}
+						}
+					}
+					if (modified){
+						packet.getChatComponentArrays().write(0, lines);
+					}
+				} catch (Exception ex){
+					ex.printStackTrace();
+				}
+			}
+
+
+
 Old way to get 2 doors:
 			
 			

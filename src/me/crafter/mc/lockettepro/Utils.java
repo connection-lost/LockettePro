@@ -22,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -268,6 +269,23 @@ public class Utils {
 		} else {
 			return text.equals(player.getName());
 		}
+	}
+	
+	public static String getSignLineFromUnknown(WrappedChatComponent rawline){
+		String json = rawline.getJson();
+		return getSignLineFromUnknown(json);
+	}
+	
+	public static String getSignLineFromUnknown(String json){
+		try { // 1.8-
+			JsonObject line = new JsonParser().parse(json).getAsJsonObject();
+			return line.get("extra").getAsJsonArray().get(0).getAsString();
+		} catch (Exception ex){}
+		try { // 1.9+
+			JsonObject line = new JsonParser().parse(json).getAsJsonObject();
+			return line.get("extra").getAsJsonArray().get(0).getAsJsonObject().get("text").getAsString();
+		} catch (Exception ex){}
+		return json;
 	}
 	
 }

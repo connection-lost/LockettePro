@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.mcstats.Metrics;
+import org.mcstats.MetricsLite;
 
 public class LockettePro extends JavaPlugin {
 
@@ -27,15 +27,6 @@ public class LockettePro extends JavaPlugin {
     	getServer().getPluginManager().registerEvents(new BlockPlayerListener(), this);
     	getServer().getPluginManager().registerEvents(new BlockEnvironmentListener(), this);
     	getServer().getPluginManager().registerEvents(new BlockInventoryMoveListener(), this);
-    	// If UUID is not enabled, UUID listener won't register
-    	if (Config.isUuidEnabled()){
-			if (Bukkit.getPluginManager().getPlugin("ProtocolLib") != null){
-	    		DependencyProtocolLib.setUpProtocolLib(this);
-			} else {
-				plugin.getLogger().info("ProtocolLib is not found!");
-				plugin.getLogger().info("UUID support requires ProtocolLib, or else signs will be ugly!");
-			}
-    	}
     	// Dependency
     	new Dependency(this);
     	// Version
@@ -52,16 +43,26 @@ public class LockettePro extends JavaPlugin {
 			needcheckhand = true;
 			break;
 		case v1_8_R1:
+		case v1_8_R2:
+		case v1_8_R3:
 		case UNKNOWN:
 		default:
 			needcheckhand = false;
 			break;
     	}
-    	Bukkit.getLogger().info(" >>> LockettePro detects Bukkit version: " + version);
-    	Bukkit.getLogger().info(" >>> needcheckhand = " + needcheckhand);
+    	// If UUID is not enabled, UUID listener won't register
+    	if (Config.isUuidEnabled()){
+			if (Bukkit.getPluginManager().getPlugin("ProtocolLib") != null){
+	    		DependencyProtocolLib.setUpProtocolLib(this);
+	        	getServer().getPluginManager().registerEvents(new SignSendListener(), this);
+			} else {
+				plugin.getLogger().info("ProtocolLib is not found!");
+				plugin.getLogger().info("UUID support requires ProtocolLib, or else signs will be ugly!");
+			}
+    	}
     	// Metrics
     	try {
-    		Metrics metrics = new Metrics(this);
+    		MetricsLite metrics = new MetricsLite(this);
 	        metrics.start();
     	} catch (Exception ex){}
     }
