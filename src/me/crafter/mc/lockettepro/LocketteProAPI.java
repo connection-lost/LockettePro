@@ -376,9 +376,11 @@ public class LocketteProAPI {
 				return true;
 			}
 		}
-		// For Towny & Factions
+		// For Towny & Vault
 		for (int i = 1; i < 4; i ++){
 			if (Dependency.isTownyTownOrNationOf(lines[i], player)) return true;
+			if (Dependency.isPermissionGroupOf(lines[i], player)) return true;
+			
 		}
 		return false;
 	}
