@@ -1,8 +1,10 @@
 package me.crafter.mc.lockettepro;
 
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.massivecraft.factions.entity.BoardColl;
@@ -17,12 +19,16 @@ import com.palmergames.bukkit.towny.object.TownyUniverse;
 import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
+import net.milkbowl.vault.permission.Permission;
+
 public class Dependency {
 	
 	protected static WorldGuardPlugin worldguard = null;
 	protected static Plugin residence = null;
 	protected static Plugin towny = null;
 	protected static Plugin factions = null;
+	protected static Plugin vault = null;
+	protected static Permission permission = null;
 	
 	public Dependency(Plugin plugin){
 		// WorldGuard
@@ -38,6 +44,12 @@ public class Dependency {
 	    towny = plugin.getServer().getPluginManager().getPlugin("Towny");
 		// Factions
 	    factions = plugin.getServer().getPluginManager().getPlugin("Factions");
+		// Vault
+	    vault = plugin.getServer().getPluginManager().getPlugin("Vault");
+	    if (vault != null){
+	    	RegisteredServiceProvider<Permission> rsp = Bukkit.getServer().getServicesManager().getRegistration(Permission.class);
+	        permission = rsp.getProvider();
+	    }
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -98,6 +110,18 @@ public class Dependency {
 					}
 				}
 			} catch (Exception e) {}
+		}
+		return false;
+	}
+	
+	public static boolean isPermissionGroupOf(String line, Player player){
+		if (vault != null){
+			try {
+				String[] groups = permission.getPlayerGroups(player);
+				for (String group : groups){
+					if (line.equals("[" + group + "]")) return true;
+				}
+			} catch (Exception e){}
 		}
 		return false;
 	}
