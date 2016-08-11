@@ -1,5 +1,7 @@
 package me.crafter.mc.lockettepro;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -18,6 +20,9 @@ import com.palmergames.bukkit.towny.object.TownyPermission.ActionType;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.wasteofplastic.askyblock.ASkyBlock;
+import com.wasteofplastic.askyblock.ASkyBlockAPI;
+import com.wasteofplastic.askyblock.Island;
 
 import net.milkbowl.vault.permission.Permission;
 
@@ -29,6 +34,9 @@ public class Dependency {
 	protected static Plugin factions = null;
 	protected static Plugin vault = null;
 	protected static Permission permission = null;
+	protected static Plugin askyblock = null;
+	protected static Plugin uskyblock = null;
+	protected static Plugin plotsquared = null;
 	
 	public Dependency(Plugin plugin){
 		// WorldGuard
@@ -50,6 +58,12 @@ public class Dependency {
 	    	RegisteredServiceProvider<Permission> rsp = Bukkit.getServer().getServicesManager().getRegistration(Permission.class);
 	        permission = rsp.getProvider();
 	    }
+	    // ASkyblock
+	    askyblock = plugin.getServer().getPluginManager().getPlugin("ASkyblock");
+	    // USkyblock
+	    uskyblock = plugin.getServer().getPluginManager().getPlugin("USkyblock");
+	    // PlotSquared
+	    plotsquared = plugin.getServer().getPluginManager().getPlugin("PlotSquared");
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -83,6 +97,17 @@ public class Dependency {
 							return true;
 						}
 					}
+				}
+			} catch (Exception e){}
+		}
+		if (askyblock != null){
+			try {
+				Island island = ASkyBlockAPI.getInstance().getIslandAt(block.getLocation());
+				if (island != null) {
+					for (UUID memberuuid : island.getMembers()){
+						if (memberuuid.equals(player.getUniqueId())) return false;
+					}
+					return true;
 				}
 			} catch (Exception e){}
 		}
