@@ -1,7 +1,7 @@
 name: LockettePro
 main: me.crafter.mc.lockettepro.LockettePro
 author: connection_lost
-softdepend: [WorldGuard, Residence, Towny, ProtocolLib, Factions, ASkyBlock, PlotSquared]
+softdepend: [Vault, WorldGuard, Residence, Towny, ProtocolLib, Factions, ASkyBlock, PlotSquared]
 version: 2.4.0
 description: >
              LockettePro is a chest protection plugin for Bukkit. It is 100% compatible with original Lockette, but delivers a lot of performance enhancements and feature options.
