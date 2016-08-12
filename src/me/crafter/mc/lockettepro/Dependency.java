@@ -9,6 +9,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.intellectualcrafters.plot.api.PlotAPI;
+import com.intellectualcrafters.plot.object.Plot;
 import com.massivecraft.factions.entity.BoardColl;
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.MPlayer;
@@ -20,7 +22,6 @@ import com.palmergames.bukkit.towny.object.TownyPermission.ActionType;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.wasteofplastic.askyblock.ASkyBlock;
 import com.wasteofplastic.askyblock.ASkyBlockAPI;
 import com.wasteofplastic.askyblock.Island;
 
@@ -35,8 +36,8 @@ public class Dependency {
 	protected static Plugin vault = null;
 	protected static Permission permission = null;
 	protected static Plugin askyblock = null;
-	protected static Plugin uskyblock = null;
 	protected static Plugin plotsquared = null;
+	protected static PlotAPI plotapi;
 	
 	public Dependency(Plugin plugin){
 		// WorldGuard
@@ -60,10 +61,11 @@ public class Dependency {
 	    }
 	    // ASkyblock
 	    askyblock = plugin.getServer().getPluginManager().getPlugin("ASkyblock");
-	    // USkyblock
-	    uskyblock = plugin.getServer().getPluginManager().getPlugin("USkyblock");
 	    // PlotSquared
 	    plotsquared = plugin.getServer().getPluginManager().getPlugin("PlotSquared");
+	    if (plotsquared != null){
+	    	plotapi = new PlotAPI();
+	    }
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -106,6 +108,20 @@ public class Dependency {
 				if (island != null) {
 					for (UUID memberuuid : island.getMembers()){
 						if (memberuuid.equals(player.getUniqueId())) return false;
+					}
+					return true;
+				}
+			} catch (Exception e){}
+		}
+		if (plotsquared != null){
+			try {
+				Plot plot = plotapi.getPlot(block.getLocation());
+				if (plot != null){
+					for (UUID uuid : plot.getOwners()){
+						if (uuid.equals(player.getUniqueId())) return false;
+					}
+					for (UUID uuid : plot.getMembers()){
+						if (uuid.equals(player.getUniqueId())) return false;
 					}
 					return true;
 				}
