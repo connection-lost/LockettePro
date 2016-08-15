@@ -123,6 +123,9 @@ public class Dependency {
 					for (UUID uuid : plot.getMembers()){
 						if (uuid.equals(player.getUniqueId())) return false;
 					}
+					for (UUID uuid : plot.getTrusted()){
+						if (uuid.equals(player.getUniqueId())) return false;
+					}
 					return true;
 				}
 			} catch (Exception e){}
