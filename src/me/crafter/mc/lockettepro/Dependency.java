@@ -7,6 +7,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.scoreboard.Team;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.intellectualcrafters.plot.api.PlotAPI;
@@ -166,6 +167,14 @@ public class Dependency {
 					if (line.equals("[" + group + "]")) return true;
 				}
 			} catch (Exception e){}
+		}
+		return false;
+	}
+	
+	public static boolean isScoreboardTeamOf(String line, Player player){
+		Team team = Bukkit.getScoreboardManager().getMainScoreboard().getEntryTeam(player.getName());
+		if (team != null){
+			if (line.equals("[" + team.getName() + "]")) return true;
 		}
 		return false;
 	}
