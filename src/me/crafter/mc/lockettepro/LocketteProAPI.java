@@ -503,10 +503,25 @@ public class LocketteProAPI {
 		}
 	}
 	
-	public static Block getBottomDoorBlock(Block block){ // Requires isDoubleDoorBlock
-		Block relative = block.getRelative(BlockFace.DOWN);
-		if (relative.getType() == block.getType()){
-			return relative;
+	public static boolean isSingleDoorBlock(Block block){
+		switch (block.getType()){
+		case FENCE_GATE:
+		case TRAP_DOOR:
+		case IRON_TRAPDOOR:
+			return true;
+		default:
+			return false;	
+		}	
+	}
+	
+	public static Block getBottomDoorBlock(Block block){ // Requires isDoubleDoorBlock || isSingleDoorBlock
+		if (isDoubleDoorBlock(block)){
+			Block relative = block.getRelative(BlockFace.DOWN);
+			if (relative.getType() == block.getType()){
+				return relative;
+			} else {
+				return block;
+			}
 		} else {
 			return block;
 		}

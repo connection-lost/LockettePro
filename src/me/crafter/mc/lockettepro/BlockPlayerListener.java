@@ -203,7 +203,7 @@ public class BlockPlayerListener implements Listener {
 				Utils.playAccessDenyEffect(player, block);
 			} else { // Handle double doors
 				if (action == Action.RIGHT_CLICK_BLOCK){
-					if (LocketteProAPI.isDoubleDoorBlock(block) && LocketteProAPI.isLocked(block)){
+					if ((LocketteProAPI.isDoubleDoorBlock(block) || LocketteProAPI.isSingleDoorBlock(block)) && LocketteProAPI.isLocked(block)){
 						Block doorblock = LocketteProAPI.getBottomDoorBlock(block);
 						BlockState doorstate = doorblock.getState();
 						Openable openablestate = (Openable)doorstate.getData();
@@ -211,7 +211,7 @@ public class BlockPlayerListener implements Listener {
 						int closetime = LocketteProAPI.getTimerDoor(doorblock);
 						List<Block> doors = new ArrayList<Block>();
 						doors.add(doorblock);
-						if (doorblock.getType() == Material.IRON_DOOR_BLOCK){
+						if (doorblock.getType() == Material.IRON_DOOR_BLOCK || doorblock.getType() == Material.IRON_TRAPDOOR){
 							LocketteProAPI.toggleDoor(doorblock, shouldopen);
 						}
 						for (BlockFace blockface : LocketteProAPI.newsfaces){
