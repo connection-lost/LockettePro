@@ -1,5 +1,5 @@
-### LockettePro
-LockettePro - A much better Lockette plugin for Bukkit
+# LockettePro
+###LockettePro - A much better Lockette plugin for Bukkit
 
 ![McStats](http://i.mcstats.org/LockettePro/Global+Statistics.png "Statistics")
 
@@ -14,7 +14,7 @@ LockettePro has a lot of enhancements compared to Lockette:
 5. Unlimited [Private], [More Users], [Timer:x] signs format.
 6. Alert messages are editable, and UTF-8 characters are supported.
 
-# Links
+### Links
 Spigot release page: https://www.spigotmc.org/resources/lockettepro.20427/  
 Bukkit release page: http://dev.bukkit.org/bukkit-plugins/lockettepro/  
 MCBBS release page: http://www.mcbbs.net/thread-567962-1-1.html    
