@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,6 +17,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.material.Openable;
@@ -231,6 +233,23 @@ public class BlockPlayerListener implements Listener {
 			break;
 		default:
 			break;
+		}
+	}
+	
+	// Protect block from something
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onInventoryOpen(InventoryOpenEvent event){
+		if (event.getInventory().getHolder() != null && event.getInventory().getHolder() instanceof Chest){
+			Chest chest = (Chest)event.getInventory().getHolder();
+			Block block = chest.getBlock();
+			Player player = (Player)event.getPlayer();
+			if (((LocketteProAPI.isLocked(block) && !LocketteProAPI.isUser(block, player)) || 
+					(LocketteProAPI.isUpDownLockedDoor(block) && !LocketteProAPI.isUserUpDownLockedDoor(block, player)))
+					&& !player.hasPermission("lockettepro.admin.use")){
+				Utils.sendMessages(player, Config.getLang("block-is-locked"));
+				event.setCancelled(true);
+				Utils.playAccessDenyEffect(player, block);
+			}
 		}
 	}
 	
