@@ -8,7 +8,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,7 +16,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.material.Openable;
@@ -189,14 +187,22 @@ public class BlockPlayerListener implements Listener {
 	// Protect block from being used & handle double doors
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onAttemptInteractLockedBlocks(PlayerInteractEvent event){
-		if (LockettePro.needCheckHand()){
-			if (event.getHand() != EquipmentSlot.HAND) return;
-		}
 		Action action = event.getAction();
+		Block block = event.getClickedBlock();
+		if (LockettePro.needCheckHand()){
+			if (event.getHand() != EquipmentSlot.HAND){
+				if (action == Action.RIGHT_CLICK_BLOCK){
+					if (LocketteProAPI.isChest(block)){
+						// something not right
+						event.setCancelled(true);
+					}
+					return;
+				}
+			}
+		}
 		switch (action){
 		case LEFT_CLICK_BLOCK:
 		case RIGHT_CLICK_BLOCK:
-			Block block = event.getClickedBlock();
 			Player player = event.getPlayer();
 			if (((LocketteProAPI.isLocked(block) && !LocketteProAPI.isUser(block, player)) || 
 					(LocketteProAPI.isUpDownLockedDoor(block) && !LocketteProAPI.isUserUpDownLockedDoor(block, player)))
@@ -233,23 +239,6 @@ public class BlockPlayerListener implements Listener {
 			break;
 		default:
 			break;
-		}
-	}
-	
-	// Protect block from something
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onInventoryOpen(InventoryOpenEvent event){
-		if (event.getInventory().getHolder() != null && event.getInventory().getHolder() instanceof Chest){
-			Chest chest = (Chest)event.getInventory().getHolder();
-			Block block = chest.getBlock();
-			Player player = (Player)event.getPlayer();
-			if (((LocketteProAPI.isLocked(block) && !LocketteProAPI.isUser(block, player)) || 
-					(LocketteProAPI.isUpDownLockedDoor(block) && !LocketteProAPI.isUserUpDownLockedDoor(block, player)))
-					&& !player.hasPermission("lockettepro.admin.use")){
-				Utils.sendMessages(player, Config.getLang("block-is-locked"));
-				event.setCancelled(true);
-				Utils.playAccessDenyEffect(player, block);
-			}
 		}
 	}
 	

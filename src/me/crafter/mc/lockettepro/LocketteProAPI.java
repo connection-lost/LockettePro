@@ -223,6 +223,17 @@ public class LocketteProAPI {
 		}
 	}
 	
+
+	public static boolean isChest(Block block){
+		switch (block.getType()){
+		case CHEST:
+		case TRAPPED_CHEST:
+			return true;
+		default:
+			return false;
+		}
+	}
+	
 	public static boolean isUpDownAlsoLockableBlock(Block block){
 		if (Config.isLockable(block.getType())){
 			switch (block.getType()){
