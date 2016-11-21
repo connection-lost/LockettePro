@@ -109,7 +109,8 @@ public class DependencyProtocolLib {
 				List<?> tileentitydatas = packet.getSpecificModifier(List.class).read(0);
 				for (Object tileentitydata : tileentitydatas) {
 					NbtCompound nbtcompound = NbtFactory.fromNMSCompound(tileentitydata);
-					if (nbtcompound == null || nbtcompound.getString("id") == null || !nbtcompound.getString("id").equals("Sign")) continue;
+					if (nbtcompound == null || nbtcompound.getString("id") == null) continue;
+					if (!(nbtcompound.getString("id").equals("Sign") || nbtcompound.getString("id").equals("minecraft:sign"))) continue;
 					String[] liness = new String[4];
 					for (int i = 0; i < 4; i++){
 						liness[i] = nbtcompound.getString("Text" + (i+1));
