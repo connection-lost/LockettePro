@@ -37,3 +37,5 @@ lockables:
 - ACACIA_DOOR
 - DARK_OAK_DOOR
 - IRON_DOOR_BLOCK
+protection-exempt:
+- explosion

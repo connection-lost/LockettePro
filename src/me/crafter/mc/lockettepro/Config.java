@@ -1,6 +1,7 @@
 package me.crafter.mc.lockettepro;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -30,19 +31,19 @@ public class Config {
 	private static boolean blockinterfereplacement = true;
 	private static boolean blockitemtransferin = false;
 	private static boolean blockitemtransferout = false;
-	private static boolean disableexplosionprotection = false;
 	private static int cachetime = 0;
 	private static boolean cacheenabled = false;
 	private static byte blockhopperminecart = 0;
+	private static Set<String> protectionexempt = new HashSet<String>();
 	
 	public Config(Plugin _plugin){
 		plugin = _plugin;
 		reload();
 	}
 	
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation") // Material ID support
 	public static void reload(){
-		plugin.saveDefaultConfig();
+		initDefaultConfig();
 		initAdditionalFiles();
 		config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "config.yml"));
 		uuid = config.getBoolean("enable-uuid-support", false);
@@ -66,14 +67,15 @@ public class Config {
 		blockinterfereplacement = config.getBoolean("block-interfere-placement", true);
 		blockitemtransferin = config.getBoolean("block-item-transfer-in", false);
 		blockitemtransferout = config.getBoolean("block-item-transfer-out", true);
-		disableexplosionprotection = config.getBoolean("disable-explosion-protection", false);
 		
 		List<String> privatestringlist = config.getStringList("private-signs");
 		List<String> additionalstringlist = config.getStringList("additional-signs");
 		List<String> everyonestringlist = config.getStringList("everyone-signs");
+		List<String> protectionexemptstringlist = config.getStringList("protection-exempt");
 		privatestrings = new HashSet<String>(privatestringlist);
 		additionalstrings = new HashSet<String>(additionalstringlist);
 		everyonestrings = new HashSet<String>(everyonestringlist);
+		protectionexempt = new HashSet<String>(protectionexemptstringlist);
 		defaultprivatestring = privatestringlist.get(0);
 		defaultadditionalstring = additionalstringlist.get(0);
 		
@@ -146,6 +148,41 @@ public class Config {
 		}
 		lockables.remove(Material.WALL_SIGN);
 	}
+
+	public static void initDefaultConfig(){
+		plugin.saveDefaultConfig();
+		config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "config.yml"));
+		config.addDefault("language-file-name", "lang.yml");
+		config.addDefault("enable-quick-protect", true);
+		config.addDefault("enable-uuid-support", false);
+		config.addDefault("block-interfere-placement", true);
+		config.addDefault("block-item-transfer-in", false);
+		config.addDefault("block-item-transfer-out", true);
+		config.addDefault("block-hopper-minecart", "remove");
+		config.addDefault("cache-time-seconds", 0);
+
+		String[] private_signs = {"[Private]", "[private]"};
+		config.addDefault("private-signs", private_signs);
+		String[] additional_signs = {"[More Users]", "[more Users]"};
+		config.addDefault("additional-signs", additional_signs);
+		String[] everyone_signs = {"[Everyone]", "[everyone]"};
+		config.addDefault("everyone-signs", everyone_signs);
+		String[] timer_signs = {"[Timer:@]", "[timer:@]"};
+		config.addDefault("timer-signs", timer_signs);
+		String[] lockables = {"CHEST","TRAPPED_CHEST","FURNACE","BURNING_FURNACE","HOPPER","BREWING_STAND","DIAMOND_BLOCK",
+				"WOODEN_DOOR","SPRUCE_DOOR","BIRCH_DOOR","JUNGLE_DOOR","ACACIA_DOOR","DARK_OAK_DOOR","IRON_DOOR_BLOCK"};
+		config.addDefault("lockables", lockables);
+		String[] protection_exempt = {"nothing"};
+		config.addDefault("protection-exempt", protection_exempt);
+		
+		config.options().copyDefaults(true);
+		
+		try {
+			config.save(new File(plugin.getDataFolder(), "config.yml"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public static void initAdditionalFiles(){
 		String[] availablefiles = {"lang.yml", "lang_zh-cn.yml", "lang_es.yml"};
@@ -187,10 +224,6 @@ public class Config {
 		return everyonestrings.contains(message);
 	}
 	
-	public static boolean isExplosionProtectionDisabled(){
-		return disableexplosionprotection;
-	}
-	
 	public static boolean isTimerSignString(String message){
 		for (String timerstring : timerstrings){
 			String[] splitted = timerstring.split("@", 2);
@@ -229,6 +262,10 @@ public class Config {
 	
 	public static boolean isCacheEnabled(){
 		return cacheenabled;
+	}
+	
+	public static boolean isProtectionExempted(String against){
+		return protectionexempt.contains(against);
 	}
 	
 }
