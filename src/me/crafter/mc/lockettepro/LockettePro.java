@@ -181,6 +181,25 @@ public class LockettePro extends JavaPlugin {
     					Utils.sendMessages(player, Config.getLang("no-permission"));
     				}
     				break;
+    			case "debug":
+    				// This is not the author debug, this prints out info
+    				if (player.hasPermission("lockettepro.debug")){
+        				player.sendMessage("LockettePro Debug Message");
+        				// Basic
+        				player.sendMessage("LockettePro: " + getDescription().getVersion());
+        				// Version
+        				player.sendMessage("Bukkit: " + "v" + Bukkit.getServer().getClass().getPackage().getName().split("v")[1] + " / LockettePro: " + version);
+        				// Config
+        				player.sendMessage("UUID: " + Config.isUuidEnabled());
+        				// ProtocolLib
+        				if (Bukkit.getPluginManager().getPlugin("ProtocolLib") == null){
+            				player.sendMessage(" - ProtocolLib missing");
+        				} else {
+            				player.sendMessage(" - ProtocolLib version: " + Bukkit.getPluginManager().getPlugin("ProtocolLib").getDescription().getVersion());
+        				}
+    					break;
+    				}
+    				break;
     			case "force":
     				if (debug && player.hasPermission("lockettepro.debug")){
         				Utils.setSignLine(Utils.getSelectedSign(player), Integer.parseInt(args[1]), args[2]);

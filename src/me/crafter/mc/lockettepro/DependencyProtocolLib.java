@@ -47,7 +47,6 @@ public class DependencyProtocolLib {
 			addMapChunkListener(plugin);
 			break;
 		}
-		
 	}
 	
 	public static void cleanUpProtocolLib(Plugin plugin){
