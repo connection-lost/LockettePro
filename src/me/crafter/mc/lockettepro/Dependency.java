@@ -75,7 +75,13 @@ public class Dependency {
 			if (!worldguard.canBuild(player, block)) return true;
 		}
 		if (residence != null){
-			if (!Residence.getPermsByLoc(block.getLocation()).playerHas(player.getName(), player.getWorld().getName(), "build", true)) return true;
+			try {
+				if (!Residence.getInstance().getPermsByLoc(block.getLocation()).playerHas(player.getName(), player.getWorld().getName(), "build", true)) return true;
+			} catch (Exception ex){
+				LockettePro.getPlugin().getLogger().info("Note from author of LockettePro: If you have encountered the error above, this is because the Residence plugin had an API change that requires LockettePro to move on.");
+				LockettePro.getPlugin().getLogger().info("Please update your Residence to 4.5+, if you are not able to do it now, use LockettePro 2.6.4- for now.");
+				LockettePro.getPlugin().getLogger().info("It is possible, but not currently, to let LockettePro to support all Residence versions. If you think this is indeed necessary with high priority, please leave me a message at Spigot discussion section.");
+			}
 		}
 		if (towny != null){
 			try {
