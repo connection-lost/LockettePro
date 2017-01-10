@@ -192,10 +192,45 @@ public class LockettePro extends JavaPlugin {
         				// Config
         				player.sendMessage("UUID: " + Config.isUuidEnabled());
         				// ProtocolLib
+        				player.sendMessage("ProtocolLib info:");
         				if (Bukkit.getPluginManager().getPlugin("ProtocolLib") == null){
             				player.sendMessage(" - ProtocolLib missing");
         				} else {
-            				player.sendMessage(" - ProtocolLib version: " + Bukkit.getPluginManager().getPlugin("ProtocolLib").getDescription().getVersion());
+            				player.sendMessage(" - ProtocolLib: " + Bukkit.getPluginManager().getPlugin("ProtocolLib").getDescription().getVersion());
+        				}
+        				// Other
+        				player.sendMessage("Linked plugins:");
+        				boolean linked = false;
+        				if (Dependency.worldguard != null){
+        					linked = true;
+            				player.sendMessage(" - Worldguard: " + Dependency.worldguard.getDescription().getVersion());
+        				}
+        				if (Dependency.residence != null){
+        					linked = true;
+            				player.sendMessage(" - Residence: " + Dependency.residence.getDescription().getVersion());
+        				}
+        				if (Dependency.towny != null){
+        					linked = true;
+            				player.sendMessage(" - Towny: " + Dependency.towny.getDescription().getVersion());
+        				}
+        				if (Dependency.factions != null){
+        					linked = true;
+            				player.sendMessage(" - Factions: " + Dependency.factions.getDescription().getVersion());
+        				}
+        				if (Dependency.vault != null){
+        					linked = true;
+            				player.sendMessage(" - Vault: " + Dependency.vault.getDescription().getVersion());
+        				}
+        				if (Dependency.askyblock != null){
+        					linked = true;
+            				player.sendMessage(" - ASkyBlock: " + Dependency.askyblock.getDescription().getVersion());
+        				}
+        				if (Dependency.plotsquared != null){
+        					linked = true;
+            				player.sendMessage(" - PlotSquared: " + Dependency.plotsquared.getDescription().getVersion());
+        				}
+        				if (!linked){
+        					player.sendMessage(" - none");
         				}
     					break;
     				}
