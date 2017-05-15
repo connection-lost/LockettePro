@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -12,6 +13,7 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 
 public class BlockEnvironmentListener implements Listener{
@@ -82,5 +84,18 @@ public class BlockEnvironmentListener implements Listener{
 			event.setNewCurrent(event.getOldCurrent());
 		}
 	}
+	
+	// Prevent villager open door
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onSomeMobOpenDoor(EntityInteractEvent event){
+		if (Config.isProtectionExempted("villager")) return;
+		// Explicitly to villager vs all doors
+		if (event.getEntity() instanceof Villager &&
+				(LocketteProAPI.isSingleDoorBlock(event.getBlock()) || LocketteProAPI.isDoubleDoorBlock(event.getBlock())) && 
+				LocketteProAPI.isProtected(event.getBlock())){
+		}
+	}
+	
+	// Prevent Enderman take block
 
 }

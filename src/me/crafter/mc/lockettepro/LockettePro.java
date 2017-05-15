@@ -13,7 +13,7 @@ import org.mcstats.MetricsLite;
 public class LockettePro extends JavaPlugin {
 
 	private static Plugin plugin;
-	private boolean debug = false;
+	private boolean debug = true;
 	private static Version version = Version.UNKNOWN;
 	private static boolean needcheckhand = false;
 
@@ -41,18 +41,19 @@ public class LockettePro extends JavaPlugin {
 		case v1_9_R2:
 		case v1_10_R1:
 		case v1_11_R1:
+		case v1_12_R1:
+		case UNKNOWN: // 1.13...+
 			needcheckhand = true;
 			break;
 		case v1_8_R1:
 		case v1_8_R2:
 		case v1_8_R3:
-		case UNKNOWN:
 		default:
 			needcheckhand = false;
 			break;
     	}
     	// If UUID is not enabled, UUID listener won't register
-    	if (Config.isUuidEnabled()){
+    	if (Config.isUuidEnabled() || Config.isLockExpire()){
 			if (Bukkit.getPluginManager().getPlugin("ProtocolLib") != null){
 	    		DependencyProtocolLib.setUpProtocolLib(this);
 	        	getServer().getPluginManager().registerEvents(new SignSendListener(), this);
@@ -135,15 +136,17 @@ public class LockettePro extends JavaPlugin {
     		    				message += args[i];
     		    			}
     		    			message = ChatColor.translateAlternateColorCodes('&', message);
-    		    			if (message.length() > 16) {
+    		    			if (!player.hasPermission("lockettepro.admin.edit") && !debug && message.length() > 18) {
     		    				Utils.sendMessages(player, Config.getLang("line-is-too-long"));
     		    				return true;
     		    			}
     		    			if (LocketteProAPI.isLockSign(block)){
     		    				switch (args[0]){
     		        			case "1":
-    		        				Utils.sendMessages(player, Config.getLang("cannot-change-this-line"));
-    		        				break;
+    		        				if (!debug || !player.hasPermission("lockettepro.admin.edit")){
+    		        					Utils.sendMessages(player, Config.getLang("cannot-change-this-line"));
+    		        					break;
+    		        				}
     		        			case "2":
     		        				if (!player.hasPermission("lockettepro.admin.edit")){
     		        					Utils.sendMessages(player, Config.getLang("cannot-change-this-line"));
@@ -161,8 +164,10 @@ public class LockettePro extends JavaPlugin {
     		    			} else if (LocketteProAPI.isAdditionalSign(block)){
     		    				switch (args[0]){
     		        			case "1":
-    		        				Utils.sendMessages(player, Config.getLang("cannot-change-this-line"));
-    		        				break;
+    		        				if (!debug || !player.hasPermission("lockettepro.admin.edit")){
+    		        					Utils.sendMessages(player, Config.getLang("cannot-change-this-line"));
+    		        					break;
+    		        				}
     		        			case "2":
     		        			case "3":
     		        			case "4":
@@ -191,6 +196,7 @@ public class LockettePro extends JavaPlugin {
         				player.sendMessage("Bukkit: " + "v" + Bukkit.getServer().getClass().getPackage().getName().split("v")[1] + " / LockettePro: " + version);
         				// Config
         				player.sendMessage("UUID: " + Config.isUuidEnabled());
+        				player.sendMessage("Expire: " + Config.isLockExpire() + " " + (Config.isLockExpire() ? Config.getLockExpireDays() : ""));
         				// ProtocolLib
         				player.sendMessage("ProtocolLib info:");
         				if (Bukkit.getPluginManager().getPlugin("ProtocolLib") == null){

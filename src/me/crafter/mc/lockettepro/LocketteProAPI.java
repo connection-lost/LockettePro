@@ -158,7 +158,12 @@ public class LocketteProAPI {
 		for (BlockFace blockface : newsfaces){
 			if (blockface == exempt) continue;
 			Block relativeblock = block.getRelative(blockface);
+			// Find [Private] sign?
 			if (isLockSign(relativeblock) && (((org.bukkit.material.Sign)relativeblock.getState().getData()).getFacing() == blockface)){
+				// Found [Private] sign, is expire turned on and expired? (relativeblock is now sign)
+				if (Config.isLockExpire() && LocketteProAPI.isSignExpired(relativeblock)) {
+					continue; // Private sign but expired... But impossible to have 2 [Private] signs anyway?
+				}
 				return true;
 			}
 		}
@@ -397,6 +402,18 @@ public class LocketteProAPI {
 		return false;
 	}
 	
+	public static boolean isSignExpired(Block block){
+		if (!isSign(block) || !isLockSign(block)) return false;
+		return isLineExpired(((Sign)block.getState()).getLine(0));
+	}
+	
+	public static boolean isLineExpired(String line){
+		long createdtime = Utils.getCreatedFromLine(line);
+		if (createdtime == -1L) return false; // No expire
+		long currenttime = (int)(System.currentTimeMillis()/1000);
+		return createdtime + Config.getLockExpireDays() * 86400L < currenttime;
+	}
+	
 	public static boolean isUpDownLockedDoor(Block block){
 		Block blockup = block.getRelative(BlockFace.UP);
 		if (blockup != null && isUpDownAlsoLockableBlock(blockup) && isLocked(blockup)) return true;
@@ -422,10 +439,12 @@ public class LocketteProAPI {
 	}
 	
 	public static boolean isLockString(String line){
+		if (line.contains("#")) line = line.split("#", 2)[0];
 		return Config.isPrivateSignString(line);
 	}
 	
 	public static boolean isAdditionalString(String line){
+		if (line.contains("#")) line = line.split("#", 2)[0];
 		return Config.isAdditionalSignString(line);
 	}
 	

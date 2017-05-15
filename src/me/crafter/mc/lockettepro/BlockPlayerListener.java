@@ -26,39 +26,66 @@ public class BlockPlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerQuickLockChest(PlayerInteractEvent event){
 		if (event.isCancelled()) return;
+		// Check quick lock enabled
 		if (Config.getQuickProtectAction() == (byte)0) return;
+		// Get player and action info
 		Action action = event.getAction();
 		Player player = event.getPlayer();
+		// Check action correctness
 		if (action == Action.RIGHT_CLICK_BLOCK && player.getItemInHand().getType() == Material.SIGN){
+			// Check quick lock action correctness
 			if (!((event.getPlayer().isSneaking() && Config.getQuickProtectAction() == (byte)2) ||
 					(!event.getPlayer().isSneaking() && Config.getQuickProtectAction() == (byte)1))) return;
+			// Check permission 
 			if (!player.hasPermission("lockettepro.lock")) return;
+			// Get target block to lock
 			BlockFace blockface = event.getBlockFace();
 			if (blockface == BlockFace.NORTH || blockface == BlockFace.WEST || blockface == BlockFace.EAST || blockface == BlockFace.SOUTH){
 				Block block = event.getClickedBlock();
-				if (Dependency.isProtectedFrom(block, player)) return; // External check here
-				if (Dependency.isProtectedFrom(block.getRelative(event.getBlockFace()), player)) return; // External check again for sign here
-				if (block.getRelative(blockface).getType() != Material.AIR) return; // This location is obstructed
+				// Check permission with external plugin
+				if (Dependency.isProtectedFrom(block, player)) return; // blockwise
+				if (Dependency.isProtectedFrom(block.getRelative(event.getBlockFace()), player)) return; // signwise
+				// Check whether locking location is obstructed
+				if (block.getRelative(blockface).getType() != Material.AIR) return;
+				// Check whether this block is lockable
 				if (LocketteProAPI.isLockable(block)){
+					// Is this block already locked?
 					boolean locked = LocketteProAPI.isLocked(block);
+					// Cancel event here
 					event.setCancelled(true);
+					// Check lock info info
 					if (!locked && !LocketteProAPI.isUpDownLockedDoor(block)){
+						// Not locked, not a locked door nearby
 						Utils.removeASign(player);
+						// Send message
 						Utils.sendMessages(player, Config.getLang("locked-quick"));
-						Utils.putSignOn(block, blockface, Config.getDefaultPrivateString(), player.getName());
+						// Put sign on
+						Block newsign = Utils.putSignOn(block, blockface, Config.getDefaultPrivateString(), player.getName());
 						Utils.resetCache(block);
+						// Cleanups - UUID
 						if (Config.isUuidEnabled()){
-        					Utils.updateLineByPlayer(block.getRelative(blockface), 1, player);
+        					Utils.updateLineByPlayer(newsign, 1, player);
         				}
+						// Cleanups - Expiracy
+//						if (Config.isLockExpire()){
+//							if (player.hasPermission("lockettepro.noexpire")){
+//								Utils.updateLineWithTime(newsign, true); // set created to -1 (no expire)
+//							} else {
+								Utils.updateLineWithTime(newsign, false); // set created to now
+//							}
+//						}
 					} else if (!locked && LocketteProAPI.isOwnerUpDownLockedDoor(block, player)){
+						// Not locked, (is locked door nearby), is owner of locked door nearby
 						Utils.removeASign(player);
 						Utils.sendMessages(player, Config.getLang("additional-sign-added-quick"));
 						Utils.putSignOn(block, blockface, Config.getDefaultAdditionalString(), "");
 					} else if (LocketteProAPI.isOwner(block, player)){
+						// Locked, (not locked door nearby), is owner of locked block
 						Utils.removeASign(player);
 						Utils.putSignOn(block, blockface, Config.getDefaultAdditionalString(), "");
 						Utils.sendMessages(player, Config.getLang("additional-sign-added-quick"));
 					} else {
+						// Cannot lock this block
 						Utils.sendMessages(player, Config.getLang("cannot-lock-quick"));
 					}
 				}
@@ -159,7 +186,11 @@ public class BlockPlayerListener implements Listener {
 				Utils.playAccessDenyEffect(player, block);
 			}
 		} else if (LocketteProAPI.isAdditionalSign(block)){
-			if (LocketteProAPI.isOwnerOfSign(block, player)){
+			// TODO the next line is spaghetti
+			if (!LocketteProAPI.isLocked(LocketteProAPI.getAttachedBlock(block))){
+				// phew, the locked block is expired!
+				// nothing
+			} else if (LocketteProAPI.isOwnerOfSign(block, player)){
 				Utils.sendMessages(player, Config.getLang("break-own-additional-sign"));
 			} else if (!LocketteProAPI.isProtected(LocketteProAPI.getAttachedBlock(block))){
 				Utils.sendMessages(player, Config.getLang("break-redundant-additional-sign"));

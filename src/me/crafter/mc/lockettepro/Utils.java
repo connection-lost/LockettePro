@@ -23,6 +23,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -33,9 +34,11 @@ public class Utils {
 	private static Map<Player, Block> selectedsign = new HashMap<Player, Block>();
 	private static Set<Player> notified = new HashSet<Player>();
 	
+	private static int SECONDSPERDAY = 86400;
+	
 	// Helper functions
 	@SuppressWarnings("deprecation")
-	public static void putSignOn(Block block, BlockFace blockface, String line1, String line2){
+	public static Block putSignOn(Block block, BlockFace blockface, String line1, String line2){
 		Block newsign = block.getRelative(blockface);
 		newsign.setType(Material.WALL_SIGN);
 		byte data = 0;
@@ -55,7 +58,7 @@ public class Utils {
 			data = 3;
 			break;
 		default:
-			return;
+			return null;
 		}
 		newsign.setData(data, true);
 		updateSign(newsign);
@@ -63,6 +66,7 @@ public class Utils {
 		sign.setLine(0, line1);
 		sign.setLine(1, line2);
 		sign.update();
+		return newsign;
 	}
 	
 	public static void setSignLine(Block block, int line, String text){ // Requires isSign
@@ -204,6 +208,16 @@ public class Utils {
 		setSignLine(block, line, player.getName() + "#" + player.getUniqueId().toString());
 	}
 	
+	public static void updateLineWithTime(Block block, boolean noexpire){
+		Sign sign = (Sign)block.getState();
+		if (noexpire){
+			sign.setLine(0, sign.getLine(0) + "#created:" + -1);
+		} else {
+			sign.setLine(0, sign.getLine(0) + "#created:" + (int)(System.currentTimeMillis()/1000));
+		}
+		sign.update();
+	}
+	
 	public static boolean isUserName(String text){
 		if (text.length() < 17 && text.length() > 2 && text.matches(usernamepattern)){
 			return true;
@@ -243,6 +257,24 @@ public class Utils {
 		return false;
 	}
 	
+	public static boolean isPrivateTimeLine(String text){
+		if (text.contains("#")){
+			String[] splitted = text.split("#", 2);
+			if (splitted[1].startsWith("created:")){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static String StripSharpSign(String text){
+		if (text.contains("#")){
+			return text.split("#", 2)[0];
+		} else {
+			return text;
+		}
+	}
+	
 	public static String getUsernameFromLine(String text){
 		if (isUsernameUuidLine(text)){
 			return text.split("#", 2)[0];
@@ -256,6 +288,14 @@ public class Utils {
 			return text.split("#", 2)[1];
 		} else {
 			return null;
+		}
+	}
+	
+	public static long getCreatedFromLine(String text){
+		if (isPrivateTimeLine(text)){
+			return Long.parseLong(text.split("#created:", 2)[1]);
+		} else {
+			return Config.getLockDefaultCreateTimeUnix();
 		}
 	}
 	

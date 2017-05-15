@@ -34,6 +34,10 @@ public class Config {
 	private static int cachetime = 0;
 	private static boolean cacheenabled = false;
 	private static byte blockhopperminecart = 0;
+	private static boolean lockexpire = false;
+	private static double lockexpiredays = 60D;
+	private static long lockdefaultcreatetime = -1L;
+	private static String lockexpirestring = "";
 	private static Set<String> protectionexempt = new HashSet<String>();
 	
 	public Config(Plugin _plugin){
@@ -108,6 +112,13 @@ public class Config {
 			blockhopperminecart = 2;
 			break;
 		}
+		
+		lockexpire = config.getBoolean("lock-expire", false);
+		lockexpiredays = config.getDouble("lock-expire-days", 0D);
+		lockdefaultcreatetime = config.getLong("lock-default-create-time-unix", -1L);
+		if (lockdefaultcreatetime < -1L) lockdefaultcreatetime = -1L;
+		lockexpirestring = ChatColor.translateAlternateColorCodes('&', 
+				config.getString("lock-expire-string", "&3[Expired]"));
 		List<String> unprocesseditems = config.getStringList("lockables");
 		lockables = new HashSet<Material>();
 		for (String unprocesseditem : unprocesseditems){
@@ -174,9 +185,13 @@ public class Config {
 		config.addDefault("lockables", lockables);
 		String[] protection_exempt = {"nothing"};
 		config.addDefault("protection-exempt", protection_exempt);
+
+		config.addDefault("lock-expire", false);
+		config.addDefault("lock-expire-days", 30D);
+		config.addDefault("lock-default-create-time-unix", -1L);
+		config.addDefault("lock-expire-string", ChatColor.RED + "[Expired]");
 		
 		config.options().copyDefaults(true);
-		
 		try {
 			config.save(new File(plugin.getDataFolder(), "config.yml"));
 		} catch (IOException e) {
@@ -185,7 +200,7 @@ public class Config {
 	}
 	
 	public static void initAdditionalFiles(){
-		String[] availablefiles = {"lang.yml", "lang_zh-cn.yml", "lang_es.yml"};
+		String[] availablefiles = {"lang.yml", "lang_zh-cn.yml", "lang_es.yml", "lang_it.yml"};
 		for (String filename : availablefiles){
 			File langfile = new File(plugin.getDataFolder(), filename);
 			if (!langfile.exists()){
@@ -199,6 +214,11 @@ public class Config {
 	public static boolean isItemTransferInBlocked() {return blockitemtransferin;}
 	public static boolean isItemTransferOutBlocked() {return blockitemtransferout;}
 	public static byte getHopperMinecartAction() {return blockhopperminecart;}
+	
+	public static boolean isLockExpire() {return lockexpire;}
+	public static Double getLockExpireDays() {return lockexpiredays;}
+	public static long getLockDefaultCreateTimeUnix() {return lockdefaultcreatetime;}
+	public static String getLockExpireString() {return lockexpirestring;}
 	
 	public static String getLang(String path){
 		return ChatColor.translateAlternateColorCodes('&', lang.getString(path, ""));
