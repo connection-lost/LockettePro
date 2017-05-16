@@ -59,7 +59,7 @@ public class LockettePro extends JavaPlugin {
 	        	getServer().getPluginManager().registerEvents(new SignSendListener(), this);
 			} else {
 				plugin.getLogger().info("ProtocolLib is not found!");
-				plugin.getLogger().info("UUID support requires ProtocolLib, or else signs will be ugly!");
+				plugin.getLogger().info("UUID & expiracy support requires ProtocolLib, or else signs will be ugly!");
 			}
     	}
     	// Metrics

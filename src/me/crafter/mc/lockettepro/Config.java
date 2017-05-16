@@ -93,8 +93,7 @@ public class Config {
 		cachetime = config.getInt("cache-time-seconds", 0) * 1000;
 		cacheenabled = (config.getInt("cache-time-seconds", 0) > 0);
 		if (cacheenabled){
-			plugin.getLogger().info("You have cache enabled!");
-			plugin.getLogger().info("This is currently for experimental purpose only!");
+			plugin.getLogger().info("Cache is enabled! In case of inconsistency, turn off immediately.");
 		}
 		
 		String blockhopperminecartstring = config.getString("block-hopper-minecart", "remove");
