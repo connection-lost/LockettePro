@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -87,15 +88,23 @@ public class BlockEnvironmentListener implements Listener{
 	
 	// Prevent villager open door
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onSomeMobOpenDoor(EntityInteractEvent event){
+	public void onVillagerOpenDoor(EntityInteractEvent event){
 		if (Config.isProtectionExempted("villager")) return;
 		// Explicitly to villager vs all doors
 		if (event.getEntity() instanceof Villager &&
 				(LocketteProAPI.isSingleDoorBlock(event.getBlock()) || LocketteProAPI.isDoubleDoorBlock(event.getBlock())) && 
 				LocketteProAPI.isProtected(event.getBlock())){
+			event.setCancelled(true);
 		}
 	}
 	
 	// Prevent Enderman take block
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onEndermanGreif(EntityInteractEvent event){
+		if (Config.isProtectionExempted("enderman")) return;
+		if (event.getEntity() instanceof Enderman && LocketteProAPI.isProtected(event.getBlock())){
+			event.setCancelled(true);
+		}
+	}
 
 }
