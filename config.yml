@@ -10,6 +10,11 @@ block-item-transfer-in: false
 block-item-transfer-out: true
 block-hopper-minecart: remove
 cache-time-seconds: 0
+lock-expire: false
+lock-expire-days: 999.9
+lock-default-create-time-unix: -1
+lock-expire-string: '&3[Expired]'
+
 private-signs:
 - '[Private]'
 - '[private]'
@@ -38,4 +43,4 @@ lockables:
 - DARK_OAK_DOOR
 - IRON_DOOR_BLOCK
 protection-exempt:
-- explosion
+- nothing

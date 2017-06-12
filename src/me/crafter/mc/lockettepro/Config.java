@@ -113,7 +113,7 @@ public class Config {
 		}
 		
 		lockexpire = config.getBoolean("lock-expire", false);
-		lockexpiredays = config.getDouble("lock-expire-days", 0D);
+		lockexpiredays = config.getDouble("lock-expire-days", 999.9D);
 		lockdefaultcreatetime = config.getLong("lock-default-create-time-unix", -1L);
 		if (lockdefaultcreatetime < -1L) lockdefaultcreatetime = -1L;
 		lockexpirestring = ChatColor.translateAlternateColorCodes('&', 
@@ -186,9 +186,9 @@ public class Config {
 		config.addDefault("protection-exempt", protection_exempt);
 
 		config.addDefault("lock-expire", false);
-		config.addDefault("lock-expire-days", 30D);
+		config.addDefault("lock-expire-days", 999.9D);
 		config.addDefault("lock-default-create-time-unix", -1L);
-		config.addDefault("lock-expire-string", ChatColor.RED + "[Expired]");
+		config.addDefault("lock-expire-string", "&3[Expired]");
 		
 		config.options().copyDefaults(true);
 		try {

@@ -16,6 +16,7 @@ public class LocketteProAPI {
 	public static BlockFace[] allfaces = {BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.UP, BlockFace.DOWN};
 	
 	public static boolean isLocked(Block block){
+		if (block == null) return false;
 		switch (block.getType()){
 		// Double Doors
 		case WOODEN_DOOR:

@@ -34,39 +34,14 @@ public class BlockDebugListener implements Listener {
 				p.sendMessage(" - now     : " + (int)(System.currentTimeMillis()/1000));
 			}
 			
-//			p.sendMessage("isLockSign: " + formatBoolean(LocketteProAPI.isLockSign(b)));
-//			if (LocketteProAPI.isLockSign(b)){
-//				p.sendMessage(" - isOwnerOnSign: " + formatBoolean(LocketteProAPI.isOwnerOnSign(b, p.getName())));
-//			}
-//			p.sendMessage("isAdditionalSign: " + formatBoolean(LocketteProAPI.isAdditionalSign(b)));
-//			if (LocketteProAPI.isAdditionalSign(b)){
-//				p.sendMessage(" - isUserOnSign: " + formatBoolean(LocketteProAPI.isUserOnSign(b, p.getName())));
-//			}
-//			p.sendMessage("isContainer: " + formatBoolean(LocketteProAPI.isContainer(b)));
 			p.sendMessage("Block: " + b.getType().toString() + " " + b.getTypeId() + ":" + b.getData());
 			
-//			if (b.getType() == Material.WALL_SIGN){
-//				for (Object line : Reflection.signToBaseComponents(b)){
-//					Bukkit.broadcastMessage(line.toString());
-//				}
-//			}
 			if (b.getType() == Material.WALL_SIGN){
-//				List<Object> basecomponents = Reflection.signToBaseComponents(b);
-//				p.sendMessage("Text:Clickable:Hoverable");
-//				for (Object basecomponent : basecomponents){
-//					//p.sendMessage(ChatColor.RED + basecomponent.toString());
-//					p.sendMessage(ChatColor.YELLOW + Reflection.baseComponentToText(basecomponent) + ":" + Reflection.baseComponentToClickable(basecomponent) + ":" + Reflection.baseComponentToHoverable(basecomponent));
-//				}
 				for (String line : ((Sign)b.getState()).getLines()){
 					p.sendMessage(ChatColor.GREEN + line);
 				}
-//				Object basecomponent = basecomponents.get(0);
-//				p.sendMessage(ChatColor.RED + basecomponent.toString());
-//				p.sendMessage(ChatColor.YELLOW + Reflection.baseComponentToText(basecomponent) + ":" + Reflection.baseComponentToClickable(basecomponent) + ":" + Reflection.baseComponentToHoverable(basecomponent));
-//				p.sendMessage(ChatColor.GREEN + ((Sign)b.getState()).getLines()[0]);
 			}
 			p.sendMessage(p.getUniqueId().toString());
-			//p.sendMessage(Utils.getUuidByUsernameFromMojang(p.getName()));
 		}	
 	}
 	

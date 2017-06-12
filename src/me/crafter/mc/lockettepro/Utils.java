@@ -23,7 +23,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -33,9 +32,7 @@ public class Utils {
 	
 	private static Map<Player, Block> selectedsign = new HashMap<Player, Block>();
 	private static Set<Player> notified = new HashSet<Player>();
-	
-	private static int SECONDSPERDAY = 86400;
-	
+		
 	// Helper functions
 	@SuppressWarnings("deprecation")
 	public static Block putSignOn(Block block, BlockFace blockface, String line1, String line2){

@@ -8,12 +8,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.mcstats.MetricsLite;
+//import org.mcstats.MetricsLite;
 
 public class LockettePro extends JavaPlugin {
 
 	private static Plugin plugin;
-	private boolean debug = true;
+	private boolean debug = false;
 	private static Version version = Version.UNKNOWN;
 	private static boolean needcheckhand = false;
 
@@ -63,10 +63,11 @@ public class LockettePro extends JavaPlugin {
 			}
     	}
     	// Metrics
-    	try {
-    		MetricsLite metrics = new MetricsLite(this);
-	        metrics.start();
-    	} catch (Exception ex){}
+    	// mcstats sucks
+//    	try {
+//    		MetricsLite metrics = new MetricsLite(this);
+//	        metrics.start();
+//    	} catch (Exception ex){}
     }
 	
     public void onDisable(){
@@ -123,9 +124,6 @@ public class LockettePro extends JavaPlugin {
     			case "4":
     				if (player.hasPermission("lockettepro.edit")){
 	    				String message = "";
-//    					if (args.length == 1){
-//    						message = "";
-//    					}
     					Block block = Utils.getSelectedSign(player);
 		    			if (block == null){
 		    				Utils.sendMessages(player, Config.getLang("no-sign-selected"));
