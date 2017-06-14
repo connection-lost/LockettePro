@@ -67,13 +67,13 @@ public class BlockPlayerListener implements Listener {
         					Utils.updateLineByPlayer(newsign, 1, player);
         				}
 						// Cleanups - Expiracy
-//						if (Config.isLockExpire()){
-//							if (player.hasPermission("lockettepro.noexpire")){
-//								Utils.updateLineWithTime(newsign, true); // set created to -1 (no expire)
-//							} else {
+						if (Config.isLockExpire()){
+							if (player.hasPermission("lockettepro.noexpire")){
+								Utils.updateLineWithTime(newsign, true); // set created to -1 (no expire)
+							} else {
 								Utils.updateLineWithTime(newsign, false); // set created to now
-//							}
-//						}
+							}
+						}
 					} else if (!locked && LocketteProAPI.isOwnerUpDownLockedDoor(block, player)){
 						// Not locked, (is locked door nearby), is owner of locked door nearby
 						Utils.removeASign(player);
