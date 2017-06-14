@@ -40,6 +40,10 @@ public class DependencyProtocolLib {
 			addTileEntityDataListener(plugin);
 			addMapChunkListener(plugin);
 			break;
+		case v1_12_R1:
+			addTileEntityDataListener(plugin);
+			addMapChunkListener(plugin);
+			break;
 		case UNKNOWN:
 		default:
 			addUpdateSignListener(plugin);
