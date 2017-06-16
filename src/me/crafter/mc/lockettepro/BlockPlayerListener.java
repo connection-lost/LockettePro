@@ -103,8 +103,8 @@ public class BlockPlayerListener implements Listener {
 			if (LocketteProAPI.isLockString(topline) || LocketteProAPI.isAdditionalString(topline)){
 				event.setLine(0, Config.getLang("sign-error"));
 				Utils.sendMessages(player, Config.getLang("cannot-lock-manual"));
+				return;
 			}
-			return;
 		}
 		if (LocketteProAPI.isLockString(topline) || LocketteProAPI.isAdditionalString(topline)){
 			Block block = LocketteProAPI.getAttachedBlock(event.getBlock());
