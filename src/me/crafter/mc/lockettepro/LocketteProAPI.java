@@ -398,6 +398,7 @@ public class LocketteProAPI {
 			if (Dependency.isTownyTownOrNationOf(lines[i], player)) return true;
 			if (Dependency.isPermissionGroupOf(lines[i], player)) return true;	
 			if (Dependency.isScoreboardTeamOf(lines[i], player)) return true;
+			if (Dependency.isSimpleClanOf(lines[i], player)) return true;
 		}
 		
 		return false;

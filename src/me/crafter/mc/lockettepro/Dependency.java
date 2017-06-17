@@ -27,6 +27,10 @@ import com.wasteofplastic.askyblock.ASkyBlockAPI;
 import com.wasteofplastic.askyblock.Island;
 
 import net.milkbowl.vault.permission.Permission;
+import net.sacredlabyrinth.phaed.simpleclans.Clan;
+import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
+import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
+import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
 
 public class Dependency {
 	
@@ -39,6 +43,8 @@ public class Dependency {
 	protected static Plugin askyblock = null;
 	protected static Plugin plotsquared = null;
 	protected static PlotAPI plotapi;
+	protected static Plugin simpleclans = null;
+	protected static ClanManager clanmanager = null;
 	
 	public Dependency(Plugin plugin){
 		// WorldGuard
@@ -67,6 +73,9 @@ public class Dependency {
 	    if (plotsquared != null){
 	    	plotapi = new PlotAPI();
 	    }
+	    // SimpleClans
+	    simpleclans = plugin.getServer().getPluginManager().getPlugin("SimpleClans");
+	    clanmanager = ((SimpleClans)simpleclans).getClanManager();
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -137,6 +146,9 @@ public class Dependency {
 				}
 			} catch (Exception e){}
 		}
+		if (simpleclans != null){
+			// TODO or not todo
+		}
 		return false;
 	}
 	
@@ -182,6 +194,19 @@ public class Dependency {
 		if (team != null){
 			if (line.equals("[" + team.getName() + "]")) return true;
 		}
+		return false;
+	}
+	
+	public static boolean isSimpleClanOf(String line, Player player){
+		try {
+			ClanPlayer clanplayer = clanmanager.getClanPlayer(player);
+			if (clanplayer != null){
+				Clan clan = clanplayer.getClan();
+				if (clan != null){
+					if (line.equals("[" + clan.getName() + "]")) return true;
+				}
+			}
+		} catch (Exception e){}
 		return false;
 	}
 
