@@ -99,8 +99,19 @@ public class BlockPlayerListener implements Listener {
 		if (event.getBlock().getType() != Material.WALL_SIGN) return;
 		String topline = event.getLine(0);
 		Player player = event.getPlayer();
+		/*  Issue #46 - Old version of Minecraft trim signs in unexpected way.
+		 *  This is caused by Minecraft was doing: (unconfirmed but seemingly)
+		 *  Place Sign -> Event Fire -> Trim Sign
+		 *  The event.getLine() will be inaccurate if the line has white space to trim
+		 * 
+		 *  This will cause player without permission will be able to lock chests by
+		 *  adding a white space after the [private] word.
+		 *  Currently this is fixed by using trimmed line in checking permission. Trimmed
+		 *  line should not be used anywhere else.  
+		 */
 		if (!player.hasPermission("lockettepro.lock")){
-			if (LocketteProAPI.isLockString(topline) || LocketteProAPI.isAdditionalString(topline)){
+			String toplinetrimmed = topline.trim();
+			if (LocketteProAPI.isLockString(toplinetrimmed) || LocketteProAPI.isAdditionalString(toplinetrimmed)){
 				event.setLine(0, Config.getLang("sign-error"));
 				Utils.sendMessages(player, Config.getLang("cannot-lock-manual"));
 				return;
