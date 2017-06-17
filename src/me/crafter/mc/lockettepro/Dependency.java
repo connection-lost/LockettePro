@@ -203,7 +203,7 @@ public class Dependency {
 			if (clanplayer != null){
 				Clan clan = clanplayer.getClan();
 				if (clan != null){
-					if (line.equals("[" + clan.getName() + "]")) return true;
+					if (line.equals("[" + clan.getTag() + "]")) return true;
 				}
 			}
 		} catch (Exception e){}
