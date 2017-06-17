@@ -16,6 +16,11 @@ import com.massivecraft.factions.entity.BoardColl;
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.MPlayer;
 import com.massivecraft.massivecore.ps.PS;
+import com.massivecraft.factions.Board;
+import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.FLocation;
+import com.massivecraft.factions.FPlayer;
+import com.massivecraft.factions.FPlayers;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
@@ -34,6 +39,7 @@ public class Dependency {
 	protected static Plugin residence = null;
 	protected static Plugin towny = null;
 	protected static Plugin factions = null;
+	protected static boolean factionsuuid = false;
 	protected static Plugin vault = null;
 	protected static Permission permission = null;
 	protected static Plugin askyblock = null;
@@ -54,6 +60,9 @@ public class Dependency {
 	    towny = plugin.getServer().getPluginManager().getPlugin("Towny");
 		// Factions
 	    factions = plugin.getServer().getPluginManager().getPlugin("Factions");
+	    if (factions != null) {
+	    	factionsuuid = (extractVersion(factions.getDescription().getVersion()) == 1.6);
+	    }
 		// Vault
 	    vault = plugin.getServer().getPluginManager().getPlugin("Vault");
 	    if (vault != null){
@@ -96,18 +105,33 @@ public class Dependency {
 			} catch (Exception e) {}
 		}
 		if (factions != null){
-			try {
-				Faction faction = BoardColl.get().getFactionAt(PS.valueOf(block));
-				if (faction != null && !faction.isNone()){
-					MPlayer mplayer = MPlayer.get(player);
-					if (mplayer != null && !mplayer.isOverriding()){
-						Faction playerfaction = mplayer.getFaction();
-						if (faction != playerfaction){
-							return true;
+			if (factionsuuid){
+				try{
+					Faction faction = Board.getFactionAt(new FLocation(block));
+					if (faction != null && !faction.isNone()){
+						FPlayer fplayer = FPlayers.getInstance().getByPlayer(player);
+						if (fplayer != null && !fplayer.isAdminBypassing()){
+							Faction playerfaction = fplayer.getFaction();
+							if  (faction != playerfaction){
+								return true;
+							}
 						}
 					}
-				}
-			} catch (Exception e){}
+				} catch (Exception e){}
+			}else{
+				try{
+					Faction faction = BoardColl.get().getFactionAt(PS.valueOf(block));
+					if (faction != null && !faction.isNone()){
+						MPlayer mplayer = MPlayer.get(player);
+						if (mplayer != null && !mplayer.isOverriding()){
+							Faction playerfaction = mplayer.getFaction();
+							if (faction != playerfaction){
+								return true;
+							}
+						}
+					}
+				} catch (Exception e){}
+			}
 		}
 		if (askyblock != null){
 			try {
@@ -184,5 +208,11 @@ public class Dependency {
 		}
 		return false;
 	}
-
+	
+	public static double extractVersion(String version){
+		version = version.replaceAll("[^0-9//.]", "");
+		String[] split = version.split("\\.");
+		if (split.length > 1) version = split[0] + "." + split[1];
+		return Double.parseDouble(version);
+	}
 }
