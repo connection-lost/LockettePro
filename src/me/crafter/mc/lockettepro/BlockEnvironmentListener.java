@@ -23,6 +23,7 @@ public class BlockEnvironmentListener implements Listener{
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onEntityExplode(EntityExplodeEvent event){
 		if (Config.isProtectionExempted("explosion")) return;
+		if (event.getLocation() != null && Config.isDisabledWorld(event.getLocation().getWorld().getName())) return;
 		Iterator<Block> it = event.blockList().iterator();
         while (it.hasNext()) {
             Block block = it.next();
@@ -34,6 +35,7 @@ public class BlockEnvironmentListener implements Listener{
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockExplode(BlockExplodeEvent event){
 		if (Config.isProtectionExempted("explosion")) return;
+		if (event.getBlock() != null && Config.isDisabledWorld(event.getBlock().getWorld().getName())) return;
 		Iterator<Block> it = event.blockList().iterator();
         while (it.hasNext()) {
             Block block = it.next();
@@ -45,6 +47,7 @@ public class BlockEnvironmentListener implements Listener{
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onStructureGrow(StructureGrowEvent event){
 		if (Config.isProtectionExempted("growth")) return;
+		if (event.getWorld() != null && Config.isDisabledWorld(event.getWorld().getName())) return;
 		for (BlockState blockstate : event.getBlocks()){
 			if (LocketteProAPI.isProtected(blockstate.getBlock())){
 				event.setCancelled(true);
@@ -57,6 +60,7 @@ public class BlockEnvironmentListener implements Listener{
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPistonExtend(BlockPistonExtendEvent event){
 		if (Config.isProtectionExempted("piston")) return;
+		if (event.getBlock() != null && Config.isDisabledWorld(event.getBlock().getWorld().getName())) return;
 		for (Block block : event.getBlocks()){
 			if (LocketteProAPI.isProtected(block)){
 				event.setCancelled(true);
@@ -69,6 +73,7 @@ public class BlockEnvironmentListener implements Listener{
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPistonRetract(BlockPistonRetractEvent event){
 		if (Config.isProtectionExempted("piston")) return;
+		if (event.getBlock() != null && Config.isDisabledWorld(event.getBlock().getWorld().getName())) return;
 		for (Block block : event.getBlocks()){
 			if (LocketteProAPI.isProtected(block)){
 				event.setCancelled(true);
@@ -81,6 +86,7 @@ public class BlockEnvironmentListener implements Listener{
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockRedstoneChange(BlockRedstoneEvent event){
 		if (Config.isProtectionExempted("redstone")) return;
+		if (event.getBlock() != null && Config.isDisabledWorld(event.getBlock().getWorld().getName())) return;
 		if (LocketteProAPI.isProtected(event.getBlock())){
 			event.setNewCurrent(event.getOldCurrent());
 		}
@@ -90,6 +96,7 @@ public class BlockEnvironmentListener implements Listener{
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onVillagerOpenDoor(EntityInteractEvent event){
 		if (Config.isProtectionExempted("villager")) return;
+		if (event.getBlock() != null && Config.isDisabledWorld(event.getBlock().getWorld().getName())) return;
 		// Explicitly to villager vs all doors
 		if (event.getEntity() instanceof Villager &&
 				(LocketteProAPI.isSingleDoorBlock(event.getBlock()) || LocketteProAPI.isDoubleDoorBlock(event.getBlock())) && 
@@ -102,6 +109,7 @@ public class BlockEnvironmentListener implements Listener{
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onEndermanGreif(EntityInteractEvent event){
 		if (Config.isProtectionExempted("enderman")) return;
+		if (event.getBlock() != null && Config.isDisabledWorld(event.getBlock().getWorld().getName())) return;
 		if (event.getEntity() instanceof Enderman && LocketteProAPI.isProtected(event.getBlock())){
 			event.setCancelled(true);
 		}
