@@ -29,7 +29,7 @@ public class BlockPlayerListener implements Listener {
 		// Check quick lock enabled
 		if (Config.getQuickProtectAction() == (byte)0) return;
 		// Check world enabled
-		if (event.getPlayer() != null && event.getPlayer().getWorld() != null && Config.isDisabledWorld(event.getPlayer().getWorld().getName())) return;
+		if (Config.isDisabledWorld(event.getPlayer().getWorld().getName())) return;
 		// Get player and action info
 		Action action = event.getAction();
 		Player player = event.getPlayer();
@@ -98,8 +98,7 @@ public class BlockPlayerListener implements Listener {
 	// Manual protection
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onManualLock(SignChangeEvent event){
-		if (event.getBlock().getType() != Material.WALL_SIGN) return;
-		if (event.getPlayer() != null && event.getPlayer().getWorld() != null && Config.isDisabledWorld(event.getPlayer().getWorld().getName())) return;
+		if (event.getBlock().getType() != Material.WALL_SIGN || Config.isDisabledWorld(event.getBlock())) return;
 		String topline = event.getLine(0);
 		Player player = event.getPlayer();
 		/*  Issue #46 - Old version of Minecraft trim signs in unexpected way.
@@ -170,7 +169,7 @@ public class BlockPlayerListener implements Listener {
 	// Player select sign
 	@EventHandler(priority = EventPriority.LOW)
 	public void playerSelectSign(PlayerInteractEvent event){
-		if (event.getPlayer() != null && Config.isDisabledWorld(event.getPlayer().getWorld().getName())) return;
+		if (event.isCancelled() || Config.isDisabledWorld(event.getClickedBlock())) return;
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.WALL_SIGN){
 			Block block = event.getClickedBlock();
 			Player player = event.getPlayer();
@@ -186,8 +185,7 @@ public class BlockPlayerListener implements Listener {
 	// Player break sign
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onAttemptBreakSign(BlockBreakEvent event){
-		if (event.isCancelled()) return;
-		if (event.getPlayer() != null && event.getPlayer().getWorld() != null && Config.isDisabledWorld(event.getPlayer().getWorld().getName())) return;
+		if (event.isCancelled() || Config.isDisabledWorld(event.getBlock())) return;
 		Block block = event.getBlock();
 		Player player = event.getPlayer();
 		if (player.hasPermission("lockettepro.admin.break")) return;
@@ -221,8 +219,7 @@ public class BlockPlayerListener implements Listener {
 	// Protect block from being destroyed
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onAttemptBreakLockedBlocks(BlockBreakEvent event){
-		if (event.isCancelled()) return;
-		if (event.getPlayer() != null && event.getPlayer().getWorld() != null && Config.isDisabledWorld(event.getPlayer().getWorld().getName())) return;
+		if (event.isCancelled() || Config.isDisabledWorld(event.getBlock())) return;
 		Block block = event.getBlock();
 		Player player = event.getPlayer();
 		if (LocketteProAPI.isLocked(block) || LocketteProAPI.isUpDownLockedDoor(block)){
@@ -235,7 +232,7 @@ public class BlockPlayerListener implements Listener {
 	// Protect block from being used & handle double doors
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onAttemptInteractLockedBlocks(PlayerInteractEvent event){
-		if (event.getPlayer() != null && event.getPlayer().getWorld() != null && Config.isDisabledWorld(event.getPlayer().getWorld().getName())) return;
+		if (Config.isDisabledWorld(event.getClickedBlock())) return;
 		Action action = event.getAction();
 		Block block = event.getClickedBlock();
 		if (LockettePro.needCheckHand()){
@@ -294,8 +291,7 @@ public class BlockPlayerListener implements Listener {
 	// Protect block from interfere block
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onAttemptPlaceInterfereBlocks(BlockPlaceEvent event){
-		if (event.isCancelled()) return;
-		if (event.getPlayer() != null && event.getPlayer().getWorld() != null && Config.isDisabledWorld(event.getPlayer().getWorld().getName())) return;
+		if (event.isCancelled() || Config.isDisabledWorld(event.getBlock())) return;
 		Block block = event.getBlock();
 		Player player = event.getPlayer();
 		if (player.hasPermission("lockettepro.admin.interfere")) return;
@@ -309,8 +305,7 @@ public class BlockPlayerListener implements Listener {
 	// Tell player about lockettepro
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlaceFirstBlockNotify(BlockPlaceEvent event){
-		if (event.isCancelled()) return;
-		if (event.getPlayer() != null && event.getPlayer().getWorld() != null && Config.isDisabledWorld(event.getPlayer().getWorld().getName())) return;
+		if (event.isCancelled() || Config.isDisabledWorld(event.getBlock())) return;
 		Block block = event.getBlock();
 		Player player = event.getPlayer();
 		if (!player.hasPermission("lockettepro.lock")) return;
