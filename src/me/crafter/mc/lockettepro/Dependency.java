@@ -75,7 +75,9 @@ public class Dependency {
 	    }
 	    // SimpleClans
 	    simpleclans = plugin.getServer().getPluginManager().getPlugin("SimpleClans");
-	    clanmanager = ((SimpleClans)simpleclans).getClanManager();
+	    if (simpleclans != null){
+	    	clanmanager = ((SimpleClans)simpleclans).getClanManager();
+	    }
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -198,8 +200,9 @@ public class Dependency {
 	}
 	
 	public static boolean isSimpleClanOf(String line, Player player){
+		if (simpleclans == null) return false;
 		try {
-			ClanPlayer clanplayer = clanmanager.getClanPlayer(player);
+			ClanPlayer clanplayer = ((SimpleClans)simpleclans).getClanManager().getClanPlayer(player);
 			if (clanplayer != null){
 				Clan clan = clanplayer.getClan();
 				if (clan != null){
