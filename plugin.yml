@@ -1,7 +1,7 @@
 name: LockettePro
 main: me.crafter.mc.lockettepro.LockettePro
 author: connection_lost
-softdepend: [Vault, WorldGuard, Residence, Towny, ProtocolLib, Factions, ASkyBlock, PlotSquared]
+softdepend: [Vault, WorldGuard, Residence, Towny, ProtocolLib, Factions, ASkyBlock, PlotSquared, SimpleClans]
 loadbefore: [SignShop]
 version: 2.8.1
 description: >
