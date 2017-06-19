@@ -22,7 +22,7 @@ public class BlockEnvironmentListener implements Listener{
 	// Prevent explosion break block
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onEntityExplode(EntityExplodeEvent event){
- 		if (Config.isProtectionExempted("explosion") || Config.isDisabledWorld(event.getLocation())) return;
+ 		if (Config.isProtectionExempted("explosion")) return;
 		Iterator<Block> it = event.blockList().iterator();
         while (it.hasNext()) {
             Block block = it.next();
@@ -33,7 +33,7 @@ public class BlockEnvironmentListener implements Listener{
 	// Prevent bed break block
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockExplode(BlockExplodeEvent event){
-		if (Config.isProtectionExempted("explosion") || Config.isDisabledWorld(event.getBlock())) return;
+		if (Config.isProtectionExempted("explosion")) return;
 		Iterator<Block> it = event.blockList().iterator();
         while (it.hasNext()) {
             Block block = it.next();
@@ -44,7 +44,7 @@ public class BlockEnvironmentListener implements Listener{
 	// Prevent tree break block
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onStructureGrow(StructureGrowEvent event){
-		if (Config.isProtectionExempted("growth") || Config.isDisabledWorld(event.getWorld().getName())) return;
+		if (Config.isProtectionExempted("growth")) return;
 		for (BlockState blockstate : event.getBlocks()){
 			if (LocketteProAPI.isProtected(blockstate.getBlock())){
 				event.setCancelled(true);
@@ -56,7 +56,7 @@ public class BlockEnvironmentListener implements Listener{
 	// Prevent piston extend break lock
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPistonExtend(BlockPistonExtendEvent event){
- 		if (Config.isProtectionExempted("piston") || Config.isDisabledWorld(event.getBlock())) return;
+ 		if (Config.isProtectionExempted("piston")) return;
 		for (Block block : event.getBlocks()){
 			if (LocketteProAPI.isProtected(block)){
 				event.setCancelled(true);
@@ -68,7 +68,7 @@ public class BlockEnvironmentListener implements Listener{
 	// Prevent piston retract break lock
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPistonRetract(BlockPistonRetractEvent event){
-		if (Config.isProtectionExempted("piston") || Config.isDisabledWorld(event.getBlock())) return;
+		if (Config.isProtectionExempted("piston")) return;
 		for (Block block : event.getBlocks()){
 			if (LocketteProAPI.isProtected(block)){
 				event.setCancelled(true);
@@ -80,7 +80,7 @@ public class BlockEnvironmentListener implements Listener{
 	// Prevent redstone current open doors
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockRedstoneChange(BlockRedstoneEvent event){
-		if (Config.isProtectionExempted("redstone") || Config.isDisabledWorld(event.getBlock())) return;
+		if (Config.isProtectionExempted("redstone")) return;
 		if (LocketteProAPI.isProtected(event.getBlock())){
 			event.setNewCurrent(event.getOldCurrent());
 		}
@@ -89,7 +89,7 @@ public class BlockEnvironmentListener implements Listener{
 	// Prevent villager open door
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onVillagerOpenDoor(EntityInteractEvent event){
- 		if (Config.isProtectionExempted("villager") || Config.isDisabledWorld(event.getBlock())) return;
+ 		if (Config.isProtectionExempted("villager")) return;
 		// Explicitly to villager vs all doors
 		if (event.getEntity() instanceof Villager &&
 				(LocketteProAPI.isSingleDoorBlock(event.getBlock()) || LocketteProAPI.isDoubleDoorBlock(event.getBlock())) && 
@@ -101,7 +101,7 @@ public class BlockEnvironmentListener implements Listener{
 	// Prevent Enderman take block
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onEndermanGreif(EntityInteractEvent event){
-		if (Config.isProtectionExempted("enderman") || Config.isDisabledWorld(event.getBlock())) return;
+		if (Config.isProtectionExempted("enderman")) return;
 		if (event.getEntity() instanceof Enderman && LocketteProAPI.isProtected(event.getBlock())){
 			event.setCancelled(true);
 		}

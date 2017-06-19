@@ -8,9 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -294,14 +292,6 @@ public class Config {
 	
 	public static boolean isDisabledWorld(String worldName){
 		return disableWorlds.contains(worldName);
-	}
-	
-	public static boolean isDisabledWorld(Block block){
-		return block != null && block.getWorld() != null && isDisabledWorld(block.getWorld().getName());
-	}
-	
-	public static boolean isDisabledWorld(Location location){
-		return location != null && location.getWorld() != null && isDisabledWorld(location.getWorld().getName());
 	}
 	
 }

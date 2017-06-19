@@ -15,7 +15,6 @@ public class BlockInventoryMoveListener implements Listener {
 	
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onInventoryMove(InventoryMoveItemEvent event){
-		if (event.getSource() != null && Config.isDisabledWorld(event.getSource().getLocation().getWorld().getName())) return;
 		if (Config.isItemTransferOutBlocked() || Config.getHopperMinecartAction() != (byte)0){
 			if (isInventoryLocked(event.getSource())){
 				if (Config.isItemTransferOutBlocked()){
