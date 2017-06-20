@@ -1,9 +1,9 @@
 # LockettePro
-###LockettePro - A much better Lockette plugin for Bukkit
+### LockettePro - A much better Lockette plugin for Bukkit
 
 LockettePro is a block-protection plugin based on Lockette (https://github.com/Acru/Lockette), the code base is entirely re-written. It is 100% compatable with original Lockette, and the plugin behaviors are also 100% same.
 
-LockettePro has a lot of enhancements compared to Lockette:
+### LockettePro has a lot of enhancements compared to Lockette:
 
 1. Much better codebase and performance, fixed a lot of issues and glitches.
 2. Real UUID support.
