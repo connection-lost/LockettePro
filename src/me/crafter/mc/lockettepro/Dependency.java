@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -29,6 +30,8 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.wasteofplastic.askyblock.ASkyBlockAPI;
 import com.wasteofplastic.askyblock.Island;
 
+import me.ryanhamshire.GriefPrevention.Claim;
+import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import net.milkbowl.vault.permission.Permission;
 import net.sacredlabyrinth.phaed.simpleclans.Clan;
 import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
@@ -48,6 +51,7 @@ public class Dependency {
 	protected static PlotAPI plotapi;
 	protected static Plugin simpleclans = null;
 	protected static ClanManager clanmanager = null;
+	protected static Plugin griefprevention = null;
 	
 	public Dependency(Plugin plugin){
 		// WorldGuard
@@ -81,6 +85,8 @@ public class Dependency {
 	    if (simpleclans != null){
 	    	clanmanager = ((SimpleClans)simpleclans).getClanManager();
 	    }
+	    // GreifPrevention
+	    griefprevention = plugin.getServer().getPluginManager().getPlugin("GriefPrevention");
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -159,6 +165,12 @@ public class Dependency {
 		}
 		if (simpleclans != null){
 			// TODO or not todo
+		}
+		if (griefprevention != null){
+			Claim claim = GriefPrevention.instance.dataStore.getClaimAt(block.getLocation(), false, null);
+			if (claim != null){
+				if (claim.allowBuild(player, Material.WALL_SIGN) != null) return true;
+			}
 		}
 		return false;
 	}
