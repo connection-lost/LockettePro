@@ -5,7 +5,10 @@ import java.util.Iterator;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Enderman;
+import org.bukkit.entity.Silverfish;
 import org.bukkit.entity.Villager;
+import org.bukkit.entity.Wither;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -13,6 +16,7 @@ import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.world.StructureGrowEvent;
@@ -98,13 +102,17 @@ public class BlockEnvironmentListener implements Listener{
 		}
 	}
 	
-	// Prevent Enderman take block
+	// Prevent mob change block
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onEndermanGreif(EntityInteractEvent event){
-		if (Config.isProtectionExempted("enderman")) return;
-		if (event.getEntity() instanceof Enderman && LocketteProAPI.isProtected(event.getBlock())){
-			event.setCancelled(true);
-		}
+	public void onMobChangeBlock(EntityChangeBlockEvent event) {
+		if ((event.getEntity() instanceof Enderman && !Config.isProtectionExempted("enderman")) ||// enderman pick up/place block
+				(event.getEntity() instanceof Wither && !Config.isProtectionExempted("wither")) ||// wither break block
+				(event.getEntity() instanceof Zombie && !Config.isProtectionExempted("zombie")) ||// zombie break door
+				(event.getEntity() instanceof Silverfish && !Config.isProtectionExempted("silverfish"))){
+			if (LocketteProAPI.isProtected(event.getBlock())){
+				event.setCancelled(true);
+			}
+		}// ignore other reason (boat break lily pad, arrow ignite tnt, etc)
 	}
 
 }
