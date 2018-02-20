@@ -39,6 +39,7 @@ public class Config {
 	private static long lockdefaultcreatetime = -1L;
 	private static String lockexpirestring = "";
 	private static Set<String> protectionexempt = new HashSet<String>();
+	private static Set<String> disableWorlds = new HashSet<String>();
 	
 	public Config(Plugin _plugin){
 		plugin = _plugin;
@@ -76,10 +77,12 @@ public class Config {
 		List<String> additionalstringlist = config.getStringList("additional-signs");
 		List<String> everyonestringlist = config.getStringList("everyone-signs");
 		List<String> protectionexemptstringlist = config.getStringList("protection-exempt");
+		List<String> disableworldsstringlist = config.getStringList("disable-worlds");
 		privatestrings = new HashSet<String>(privatestringlist);
 		additionalstrings = new HashSet<String>(additionalstringlist);
 		everyonestrings = new HashSet<String>(everyonestringlist);
 		protectionexempt = new HashSet<String>(protectionexemptstringlist);
+		disableWorlds = new HashSet<String>(disableworldsstringlist);
 		defaultprivatestring = privatestringlist.get(0);
 		defaultadditionalstring = additionalstringlist.get(0);
 		
@@ -199,7 +202,7 @@ public class Config {
 	}
 	
 	public static void initAdditionalFiles(){
-		String[] availablefiles = {"lang.yml", "lang_zh-cn.yml", "lang_es.yml", "lang_it.yml"};
+		String[] availablefiles = {"lang.yml", "lang_zh-cn.yml", "lang_zh-tw.yml", "lang_es.yml", "lang_it.yml"};
 		for (String filename : availablefiles){
 			File langfile = new File(plugin.getDataFolder(), filename);
 			if (!langfile.exists()){
@@ -285,6 +288,10 @@ public class Config {
 	
 	public static boolean isProtectionExempted(String against){
 		return protectionexempt.contains(against);
+	}
+	
+	public static boolean isDisabledWorld(String worldName){
+		return disableWorlds.contains(worldName);
 	}
 	
 }

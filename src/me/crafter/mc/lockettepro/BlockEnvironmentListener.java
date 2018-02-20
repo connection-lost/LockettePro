@@ -22,7 +22,7 @@ public class BlockEnvironmentListener implements Listener{
 	// Prevent explosion break block
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onEntityExplode(EntityExplodeEvent event){
-		if (Config.isProtectionExempted("explosion")) return;
+ 		if (Config.isProtectionExempted("explosion")) return;
 		Iterator<Block> it = event.blockList().iterator();
         while (it.hasNext()) {
             Block block = it.next();
@@ -56,7 +56,7 @@ public class BlockEnvironmentListener implements Listener{
 	// Prevent piston extend break lock
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPistonExtend(BlockPistonExtendEvent event){
-		if (Config.isProtectionExempted("piston")) return;
+ 		if (Config.isProtectionExempted("piston")) return;
 		for (Block block : event.getBlocks()){
 			if (LocketteProAPI.isProtected(block)){
 				event.setCancelled(true);
@@ -89,7 +89,7 @@ public class BlockEnvironmentListener implements Listener{
 	// Prevent villager open door
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onVillagerOpenDoor(EntityInteractEvent event){
-		if (Config.isProtectionExempted("villager")) return;
+ 		if (Config.isProtectionExempted("villager")) return;
 		// Explicitly to villager vs all doors
 		if (event.getEntity() instanceof Villager &&
 				(LocketteProAPI.isSingleDoorBlock(event.getBlock()) || LocketteProAPI.isDoubleDoorBlock(event.getBlock())) && 

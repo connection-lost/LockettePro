@@ -44,3 +44,5 @@ lockables:
 - IRON_DOOR_BLOCK
 protection-exempt:
 - nothing
+disable-worlds:
+- world_without_lockettepro

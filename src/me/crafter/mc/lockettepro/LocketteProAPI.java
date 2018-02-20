@@ -17,6 +17,8 @@ public class LocketteProAPI {
 	
 	public static boolean isLocked(Block block){
 		if (block == null) return false;
+		// World check
+		if (Config.isDisabledWorld(block.getWorld().getName())) return false;
 		switch (block.getType()){
 		// Double Doors
 		case WOODEN_DOOR:
@@ -208,6 +210,8 @@ public class LocketteProAPI {
 	}
 	
 	public static boolean isLockable(Block block){
+		// World check
+		if (block != null && Config.isDisabledWorld(block.getWorld().getName())) return false;
 		Material material = block.getType();
 		//Bad blocks
 		switch (material){
