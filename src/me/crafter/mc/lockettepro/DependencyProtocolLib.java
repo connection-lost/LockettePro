@@ -1,8 +1,10 @@
 package me.crafter.mc.lockettepro;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import com.comphenix.protocol.PacketType;
@@ -16,8 +18,11 @@ import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 
 public class DependencyProtocolLib {
+	
+	public static List<Player> signqueue = new ArrayList<Player>();
 
 	public static void setUpProtocolLib(Plugin plugin){
+		addOpenSignEditorListener(plugin);
 		switch (LockettePro.getBukkitVersion()){
 		case v1_8_R1:
 		case v1_8_R2:
@@ -61,6 +66,18 @@ public class DependencyProtocolLib {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void addOpenSignEditorListener(Plugin plugin){
+		ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new PacketAdapter(plugin, ListenerPriority.LOW, PacketType.Play.Server.OPEN_SIGN_EDITOR) {
+			@Override
+			public void onPacketSending(PacketEvent event) {
+				Player player = event.getPlayer();
+				signqueue.add(player);
+				try {Thread.sleep(25);} catch (Exception e) {e.printStackTrace();}
+				if (signqueue.remove(player) == false) event.setCancelled(true);
+			}
+		}).start();
 	}
 	
 	public static void addUpdateSignListener(Plugin plugin){

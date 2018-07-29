@@ -21,11 +21,94 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.material.Openable;
 
 public class BlockPlayerListener implements Listener {
+	
+	// Quick protect for chests v2
+
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onPlayerQuickLockChest2(BlockPlaceEvent event){
+		// Fallback check
+		if (Config.useOldInteractHandle()) return;
+		
+		if (event.isCancelled()) return;
+		
+		Bukkit.broadcastMessage(System.currentTimeMillis() + " " + event.getPlayer().getName() + " " + event.getBlock().getType() + " Sneak:" + event.getPlayer().isSneaking() );
+		// Check quick-protect is enabled
+		if (Config.getQuickProtectAction() == (byte)0) return;
+		Bukkit.broadcastMessage("Pass - quick protect");
+
+		// Check block correctness
+		Block block = event.getBlock();
+		if (block == null || block.getType() != Material.WALL_SIGN) return;
+		Bukkit.broadcastMessage("Pass - correctness");
+		
+		// Check action correctness
+		Player player = event.getPlayer();
+		if (!((player.isSneaking() && Config.getQuickProtectAction() == (byte)2) ||
+				(!player.isSneaking() && Config.getQuickProtectAction() == (byte)1))) return;
+		Bukkit.broadcastMessage("Pass - action");
+		
+		// Check permission
+		if (!player.hasPermission("lockettepro.lock")) return;
+		Bukkit.broadcastMessage("Pass - perms");
+		
+		
+		// Check permission on block
+		// Ignored for now because other plugin will handle this
+		// Check permission on relative block
+		Block target = LocketteProAPI.getAttachedBlock(block);
+		if (Dependency.isProtectedFrom(target, player)) return;
+		Bukkit.broadcastMessage("Pass - target");
+		
+		// Check whether this block is lockable
+		if (!LocketteProAPI.isLockable(block)) return;
+		Bukkit.broadcastMessage("Pass - lockable");
+		
+		// Start trying to lock the block
+		boolean locked = LocketteProAPI.isLocked(target);
+		if (!locked && !LocketteProAPI.isUpDownLockedDoor(block)){
+			// Not locked, not a locked door nearby
+			// Send message
+			Utils.sendMessages(player, Config.getLang("locked-quick"));
+			// Set sign lines
+			Utils.setSignLine(block, 0, Config.getDefaultPrivateString());
+			Utils.setSignLine(block, 1, player.getName());
+			Utils.resetCache(block); Utils.resetCache(target);
+			// Cleanups - UUID
+			if (Config.isUuidEnabled()){
+				Utils.updateLineByPlayer(block, 1, player);
+			}
+			// Cleanups - Expiracy
+			if (Config.isLockExpire()){
+				if (player.hasPermission("lockettepro.noexpire")){
+					Utils.updateLineWithTime(block, true); // set created to -1 (no expire)
+				} else {
+					Utils.updateLineWithTime(block, false); // set created to now
+				}
+			}
+		} else if (!locked && LocketteProAPI.isOwnerUpDownLockedDoor(block, player)){
+			// Not locked, (is locked door nearby), is owner of locked door nearby
+			Utils.sendMessages(player, Config.getLang("additional-sign-added-quick"));
+			// Set sign lines
+			Utils.setSignLine(block, 0, Config.getDefaultAdditionalString());
+		} else if (LocketteProAPI.isOwner(block, player)){
+			// Locked, (not locked door nearby), is owner of locked block
+			Utils.sendMessages(player, Config.getLang("additional-sign-added-quick"));
+			// Set sign lines
+			Utils.setSignLine(block, 0, Config.getDefaultAdditionalString());
+		} else {
+			// Cannot lock this block
+			Utils.sendMessages(player, Config.getLang("cannot-lock-quick"));
+		}		
+	}
 
 	// Quick protect for chests
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerQuickLockChest(PlayerInteractEvent event){
+		// Fallback check
+		if (!Config.useOldInteractHandle()) return;
+		
 		if (event.isCancelled()) return;
+		
 		// Check quick lock enabled
 		if (Config.getQuickProtectAction() == (byte)0) return;
 		// Get player and action info

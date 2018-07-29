@@ -40,6 +40,8 @@ public class Config {
 	private static String lockexpirestring = "";
 	private static Set<String> protectionexempt = new HashSet<String>();
 	
+	private static boolean oldinteracthandle = false;
+	
 	public Config(Plugin _plugin){
 		plugin = _plugin;
 		reload();
@@ -285,6 +287,10 @@ public class Config {
 	
 	public static boolean isProtectionExempted(String against){
 		return protectionexempt.contains(against);
+	}
+	
+	public static boolean useOldInteractHandle(){
+		return oldinteracthandle;
 	}
 	
 }
