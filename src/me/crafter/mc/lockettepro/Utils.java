@@ -19,6 +19,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
@@ -32,6 +33,7 @@ public class Utils {
 	
 	private static Map<Player, Block> selectedsign = new HashMap<Player, Block>();
 	private static Set<Player> notified = new HashSet<Player>();
+	private static Map<Player, InventoryHolder> protectedinventoryholder = new HashMap<Player, InventoryHolder>();
 		
 	// Helper functions
 	@SuppressWarnings("deprecation")
@@ -323,6 +325,10 @@ public class Utils {
 			return line.get("extra").getAsJsonArray().get(0).getAsJsonObject().get("text").getAsString();
 		} catch (Exception ex){}
 		return json;
+	}
+	
+	public static Map<Player, InventoryHolder> getProtectedInventoryHolder(){
+		return protectedinventoryholder;
 	}
 	
 }

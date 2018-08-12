@@ -24,6 +24,7 @@ public class Config {
 	private static Set<String> privatestrings = new HashSet<String>();
 	private static Set<String> additionalstrings = new HashSet<String>();
 	private static Set<String> everyonestrings = new HashSet<String>();
+	private static Set<String> exhibitstrings = new HashSet<String>();
 	private static Set<String> timerstrings = new HashSet<String>();
 	private static String defaultprivatestring = "[Private]";
 	private static String defaultadditionalstring = "[More Users]";
@@ -39,6 +40,7 @@ public class Config {
 	private static long lockdefaultcreatetime = -1L;
 	private static String lockexpirestring = "";
 	private static Set<String> protectionexempt = new HashSet<String>();
+	private static Set<String> disableWorlds = new HashSet<String>();
 	
 	public Config(Plugin _plugin){
 		plugin = _plugin;
@@ -75,11 +77,15 @@ public class Config {
 		List<String> privatestringlist = config.getStringList("private-signs");
 		List<String> additionalstringlist = config.getStringList("additional-signs");
 		List<String> everyonestringlist = config.getStringList("everyone-signs");
+		List<String> exhibitstringlist = config.getStringList("exhibit-signs");
 		List<String> protectionexemptstringlist = config.getStringList("protection-exempt");
+		List<String> disableworldsstringlist = config.getStringList("disable-worlds");
 		privatestrings = new HashSet<String>(privatestringlist);
 		additionalstrings = new HashSet<String>(additionalstringlist);
 		everyonestrings = new HashSet<String>(everyonestringlist);
+		exhibitstrings = new HashSet<String>(exhibitstringlist);
 		protectionexempt = new HashSet<String>(protectionexemptstringlist);
+		disableWorlds = new HashSet<String>(disableworldsstringlist);
 		defaultprivatestring = privatestringlist.get(0);
 		defaultadditionalstring = additionalstringlist.get(0);
 		
@@ -177,6 +183,8 @@ public class Config {
 		config.addDefault("additional-signs", additional_signs);
 		String[] everyone_signs = {"[Everyone]", "[everyone]"};
 		config.addDefault("everyone-signs", everyone_signs);
+		String[] exhibit_signs = {"[Exhibit]", "[exhibit]"};
+		config.addDefault("exhibit-signs", exhibit_signs);
 		String[] timer_signs = {"[Timer:@]", "[timer:@]"};
 		config.addDefault("timer-signs", timer_signs);
 		String[] lockables = {"CHEST","TRAPPED_CHEST","FURNACE","BURNING_FURNACE","HOPPER","BREWING_STAND","DIAMOND_BLOCK",
@@ -199,7 +207,7 @@ public class Config {
 	}
 	
 	public static void initAdditionalFiles(){
-		String[] availablefiles = {"lang.yml", "lang_zh-cn.yml", "lang_es.yml", "lang_it.yml"};
+		String[] availablefiles = {"lang.yml", "lang_zh-cn.yml", "lang_zh-tw.yml", "lang_es.yml", "lang_it.yml"};
 		for (String filename : availablefiles){
 			File langfile = new File(plugin.getDataFolder(), filename);
 			if (!langfile.exists()){
@@ -243,6 +251,10 @@ public class Config {
 		return everyonestrings.contains(message);
 	}
 	
+	public static boolean isExhibitSignString(String message){
+		return exhibitstrings.contains(message);
+	}
+	
 	public static boolean isTimerSignString(String message){
 		for (String timerstring : timerstrings){
 			String[] splitted = timerstring.split("@", 2);
@@ -279,12 +291,20 @@ public class Config {
 		return cachetime;
 	}
 	
+	public static Set<String> getExhibitTags(){
+		return exhibitstrings;
+	}
+	
 	public static boolean isCacheEnabled(){
 		return cacheenabled;
 	}
 	
 	public static boolean isProtectionExempted(String against){
 		return protectionexempt.contains(against);
+	}
+	
+	public static boolean isDisabledWorld(String worldName){
+		return disableWorlds.contains(worldName);
 	}
 	
 }

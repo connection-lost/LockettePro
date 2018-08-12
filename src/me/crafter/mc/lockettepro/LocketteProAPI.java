@@ -1,5 +1,7 @@
 package me.crafter.mc.lockettepro;
 
+import java.util.Set;
+
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -17,6 +19,8 @@ public class LocketteProAPI {
 	
 	public static boolean isLocked(Block block){
 		if (block == null) return false;
+		// World check
+		if (Config.isDisabledWorld(block.getWorld().getName())) return false;
 		switch (block.getType()){
 		// Double Doors
 		case WOODEN_DOOR:
@@ -151,6 +155,27 @@ public class LocketteProAPI {
 		return false;
 	}
 	
+	public static boolean isExhibit(Block block){
+		switch (block.getType()){
+		// Chests (Second block only)
+		case CHEST:
+		case TRAPPED_CHEST:
+			// Check second chest sign
+			for (BlockFace chestface : newsfaces){
+				Block relativechest = block.getRelative(chestface);
+				if (relativechest.getType() == block.getType()){
+					if (isTagSingleBlock(relativechest, chestface.getOppositeFace(), Config.getExhibitTags())) return true;
+				}
+			}
+			// Don't break here
+		// Everything else (First block of container check goes here)
+		default:
+			if (isTagSingleBlock(block, null, Config.getExhibitTags())) return true; 
+			break;
+		}
+		return false;
+	}
+	
 	public static boolean isProtected(Block block){
 		return (isLockSign(block) || isLocked(block) || isUpDownLockedDoor(block));
 	}
@@ -197,6 +222,19 @@ public class LocketteProAPI {
 		return false;
 	}
 	
+	public static boolean isTagSingleBlock(Block block, BlockFace exempt, Set<String> tags){ // Requires isLocked
+		for (BlockFace blockface : newsfaces){
+			if (blockface == exempt) continue;
+			Block relativeblock = block.getRelative(blockface);
+			if (isLockSignOrAdditionalSign(relativeblock) && (((org.bukkit.material.Sign)relativeblock.getState().getData()).getFacing() == blockface)){
+				if (isTagOnSign(relativeblock, tags)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	public static boolean isOwnerOfSign(Block block, Player player){ // Requires isSign
 		Block protectedblock = getAttachedBlock(block);
 		// Normal situation, that block is just locked by an adjacent sign
@@ -208,6 +246,8 @@ public class LocketteProAPI {
 	}
 	
 	public static boolean isLockable(Block block){
+		// World check
+		if (block != null && Config.isDisabledWorld(block.getWorld().getName())) return false;
 		Material material = block.getType();
 		//Bad blocks
 		switch (material){
@@ -401,6 +441,16 @@ public class LocketteProAPI {
 			if (Dependency.isSimpleClanOf(lines[i], player)) return true;
 		}
 		
+		return false;
+	}
+	
+	public static boolean isTagOnSign(Block block, Set<String> tags){
+		String[] lines = ((Sign)block.getState()).getLines();
+		for (int i = 1; i < 4; i ++){
+			if (tags.contains(lines[i])) {
+				return true;
+			}
+		}
 		return false;
 	}
 	

@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,18 +17,23 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.material.Openable;
 
 public class BlockPlayerListener implements Listener {
 
 	// Quick protect for chests
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onPlayerQuickLockChest(PlayerInteractEvent event){
-		if (event.isCancelled()) return;
 		// Check quick lock enabled
 		if (Config.getQuickProtectAction() == (byte)0) return;
+		// Check world enabled
+		if (Config.isDisabledWorld(event.getPlayer().getWorld().getName())) return;
 		// Get player and action info
 		Action action = event.getAction();
 		Player player = event.getPlayer();
@@ -165,7 +171,7 @@ public class BlockPlayerListener implements Listener {
 	}
 	
 	// Player select sign
-	@EventHandler(priority = EventPriority.LOW)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void playerSelectSign(PlayerInteractEvent event){
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.WALL_SIGN){
 			Block block = event.getClickedBlock();
@@ -180,9 +186,8 @@ public class BlockPlayerListener implements Listener {
 	}
 	
 	// Player break sign
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onAttemptBreakSign(BlockBreakEvent event){
-		if (event.isCancelled()) return;
 		Block block = event.getBlock();
 		Player player = event.getPlayer();
 		if (player.hasPermission("lockettepro.admin.break")) return;
@@ -214,9 +219,8 @@ public class BlockPlayerListener implements Listener {
 	}
 	
 	// Protect block from being destroyed
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onAttemptBreakLockedBlocks(BlockBreakEvent event){
-		if (event.isCancelled()) return;
 		Block block = event.getBlock();
 		Player player = event.getPlayer();
 		if (LocketteProAPI.isLocked(block) || LocketteProAPI.isUpDownLockedDoor(block)){
@@ -246,7 +250,7 @@ public class BlockPlayerListener implements Listener {
 		case LEFT_CLICK_BLOCK:
 		case RIGHT_CLICK_BLOCK:
 			Player player = event.getPlayer();
-			if (((LocketteProAPI.isLocked(block) && !LocketteProAPI.isUser(block, player)) || 
+			if (((LocketteProAPI.isLocked(block) && !LocketteProAPI.isUser(block, player) && !LocketteProAPI.isExhibit(block) ) || 
 					(LocketteProAPI.isUpDownLockedDoor(block) && !LocketteProAPI.isUserUpDownLockedDoor(block, player)))
 					&& !player.hasPermission("lockettepro.admin.use")){
 				Utils.sendMessages(player, Config.getLang("block-is-locked"));
@@ -254,7 +258,8 @@ public class BlockPlayerListener implements Listener {
 				Utils.playAccessDenyEffect(player, block);
 			} else { // Handle double doors
 				if (action == Action.RIGHT_CLICK_BLOCK){
-					if ((LocketteProAPI.isDoubleDoorBlock(block) || LocketteProAPI.isSingleDoorBlock(block)) && LocketteProAPI.isLocked(block)){
+					if(LocketteProAPI.isLocked(block)) {
+						if (LocketteProAPI.isDoubleDoorBlock(block) || LocketteProAPI.isSingleDoorBlock(block)){
 						Block doorblock = LocketteProAPI.getBottomDoorBlock(block);
 						BlockState doorstate = doorblock.getState();
 						Openable openablestate = (Openable)doorstate.getData();
@@ -275,6 +280,19 @@ public class BlockPlayerListener implements Listener {
 						if (closetime > 0){
 							Bukkit.getScheduler().runTaskLater(LockettePro.getPlugin(), new DoorToggleTask(doors), closetime*20);
 						}
+						} else if (
+								LocketteProAPI.isExhibit(block) && 
+								!LocketteProAPI.isUser(block, player) && 
+								!player.hasPermission("lockettepro.admin.use")
+								) {
+							if (block.getState() instanceof Chest && ((Chest)block.getState()).getInventory() instanceof DoubleChestInventory) {
+								Utils.getProtectedInventoryHolder().put(player, ((DoubleChestInventory)((Chest)block.getState()).getInventory()).getLeftSide().getHolder());
+								//player.sendMessage(("§bProtect DInventoryHolder: " + getCode(((DoubleChestInventory)((Chest)block.getState()).getInventory()).getLeftSide().getHolder().toString())));
+							} else if (block.getState() instanceof InventoryHolder) {
+								Utils.getProtectedInventoryHolder().put(player, ((InventoryHolder)block.getState()));
+								//player.sendMessage("§bProtect InventoryHolder: " + getCode(((InventoryHolder)block.getState()).toString()));
+							}
+						}
 					}
 				}
 			}
@@ -284,10 +302,80 @@ public class BlockPlayerListener implements Listener {
 		}
 	}
 	
+	/*
+	@EventHandler(ignoreCancelled = true)
+	public void onInventoryOpen(InventoryOpenEvent event) {
+		if(
+				event.getPlayer() != null && event.getPlayer() instanceof Player && 
+				Utils.getProtectedInventoryHolder().containsKey((Player)event.getPlayer()) && 
+				event.getInventory() != null) {
+			Player player = (Player)event.getPlayer();
+			if(event.getInventory() instanceof DoubleChestInventory && Utils.getProtectedInventoryHolder().get((Player)event.getPlayer()).equals(((DoubleChestInventory)event.getInventory()).getLeftSide().getHolder())) {
+				player.sendMessage("§aProtected DoubleChestInventory Open: " + getCode(((DoubleChestInventory)event.getInventory()).getLeftSide().getHolder().toString()));
+			} else if (Utils.getProtectedInventoryHolder().get((Player)event.getPlayer()).equals(event.getInventory().getHolder())) {
+				player.sendMessage("§aProtected Inventory Open: " + getCode(event.getInventory().getHolder().toString()));
+			}
+		}
+	}
+	*/
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onInventoryClick(InventoryClickEvent event) {
+		if(
+				event.getWhoClicked() != null && event.getWhoClicked() instanceof Player && 
+				Utils.getProtectedInventoryHolder().containsKey((Player)event.getWhoClicked()) && 
+				event.getInventory() != null) {
+			event.setCancelled(true);
+			/*
+			Player player = (Player)event.getWhoClicked();
+			if(event.getInventory() instanceof DoubleChestInventory && Utils.getProtectedInventoryHolder().get((Player)event.getWhoClicked()).equals(((DoubleChestInventory)event.getInventory()).getLeftSide().getHolder())) {
+				player.sendMessage("§dProtected DoubleChestInventory Click: " + getCode(((DoubleChestInventory)event.getInventory()).getLeftSide().getHolder().toString()));
+			} else if (Utils.getProtectedInventoryHolder().get((Player)event.getWhoClicked()).equals(event.getInventory().getHolder())) {
+				player.sendMessage("§dProtected Inventory Click: " + getCode(event.getInventory().getHolder().toString()));
+			}
+			*/
+		}
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onInventoryClose(InventoryCloseEvent event) {
+		if(
+				event.getPlayer() != null && event.getPlayer() instanceof Player && 
+				Utils.getProtectedInventoryHolder().containsKey((Player)event.getPlayer()) && 
+				event.getInventory() != null) {
+			/*
+			Player player = (Player)event.getPlayer();
+			if(event.getInventory() instanceof DoubleChestInventory && Utils.getProtectedInventoryHolder().get((Player)event.getPlayer()).equals(((DoubleChestInventory)event.getInventory()).getLeftSide().getHolder())) {
+				player.sendMessage("§cProtected DInventory Close: " + getCode(((DoubleChestInventory)event.getInventory()).getLeftSide().getHolder().toString()));
+			} else if (Utils.getProtectedInventoryHolder().get((Player)event.getPlayer()).equals(event.getInventory().getHolder())) {
+				player.sendMessage("§cProtected Inventory Close: " + getCode(event.getInventory().getHolder().toString()));
+			}
+			*/
+			Utils.getProtectedInventoryHolder().remove((Player)event.getPlayer());
+		}
+	}
+	
+	/*
+	private boolean isProtectedInventoryHolder(HumanEntity humanEntity, Inventory inventory) {
+		return 
+				humanEntity != null && 
+				humanEntity instanceof Player && 
+				Utils.getProtectedInventoryHolder().containsKey((Player)humanEntity) && 
+				inventory != null &&
+				(
+					(inventory instanceof DoubleChestInventory && Utils.getProtectedInventoryHolder().get((Player)humanEntity).equals(((DoubleChestInventory)inventory).getLeftSide().getHolder())) ||
+					(Utils.getProtectedInventoryHolder().get((Player)humanEntity).equals(inventory.getHolder()))
+				);
+	}
+	
+	private String getCode(String text) {
+		return text.substring(text.lastIndexOf("@") + 1);
+	}
+	*/
+	
 	// Protect block from interfere block
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onAttemptPlaceInterfereBlocks(BlockPlaceEvent event){
-		if (event.isCancelled()) return;
 		Block block = event.getBlock();
 		Player player = event.getPlayer();
 		if (player.hasPermission("lockettepro.admin.interfere")) return;
@@ -299,9 +387,8 @@ public class BlockPlayerListener implements Listener {
 	}
 	
 	// Tell player about lockettepro
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlaceFirstBlockNotify(BlockPlaceEvent event){
-		if (event.isCancelled()) return;
 		Block block = event.getBlock();
 		Player player = event.getPlayer();
 		if (!player.hasPermission("lockettepro.lock")) return;
