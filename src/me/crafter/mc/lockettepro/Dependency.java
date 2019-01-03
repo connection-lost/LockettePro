@@ -1,8 +1,11 @@
 package me.crafter.mc.lockettepro;
 
+import java.lang.reflect.Method;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -10,6 +13,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.scoreboard.Team;
 
 import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.intellectualcrafters.plot.api.PlotAPI;
 import com.intellectualcrafters.plot.object.Plot;
 import com.massivecraft.factions.entity.BoardColl;
@@ -26,6 +30,8 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.wasteofplastic.askyblock.ASkyBlockAPI;
 import com.wasteofplastic.askyblock.Island;
 
+import me.ryanhamshire.GriefPrevention.Claim;
+import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import net.milkbowl.vault.permission.Permission;
 import net.sacredlabyrinth.phaed.simpleclans.Clan;
 import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
@@ -45,6 +51,7 @@ public class Dependency {
 	protected static PlotAPI plotapi;
 	protected static Plugin simpleclans = null;
 	protected static ClanManager clanmanager = null;
+	protected static Plugin griefprevention = null;
 	
 	public Dependency(Plugin plugin){
 		// WorldGuard
@@ -75,7 +82,11 @@ public class Dependency {
 	    }
 	    // SimpleClans
 	    simpleclans = plugin.getServer().getPluginManager().getPlugin("SimpleClans");
-	    clanmanager = ((SimpleClans)simpleclans).getClanManager();
+	    if (simpleclans != null){
+	    	clanmanager = ((SimpleClans)simpleclans).getClanManager();
+	    }
+	    // GreifPrevention
+	    griefprevention = plugin.getServer().getPluginManager().getPlugin("GriefPrevention");
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -84,13 +95,19 @@ public class Dependency {
 			if (!worldguard.canBuild(player, block)) return true;
 		}
 		if (residence != null){
-			try {
-				if (!Residence.getInstance().getPermsByLoc(block.getLocation()).playerHas(player.getName(), player.getWorld().getName(), "build", true)) return true;
-			} catch (Exception ex){
-				LockettePro.getPlugin().getLogger().info("Note from author of LockettePro: If you have encountered the error above, this is because the Residence plugin had an API change that requires LockettePro to move on.");
-				LockettePro.getPlugin().getLogger().info("Please update your Residence to 4.5+, if you are not able to do it now, use LockettePro 2.6.4- for now.");
-				LockettePro.getPlugin().getLogger().info("It is possible, but not currently, to let LockettePro to support all Residence versions. If you think this is indeed necessary with high priority, please leave me a message at Spigot discussion section.");
-			}
+			try { // 1st try
+				if (!Residence.getInstance().getPermsByLoc(block.getLocation()).playerHas(player.getName(), player.getWorld().getName(), "build", true))
+					return true;
+			} catch (NoSuchMethodError ex){
+				try {
+					Method getPermsByLoc = Residence.class.getDeclaredMethod("getPermsByLoc", Location.class);
+					FlagPermissions fp = (FlagPermissions) getPermsByLoc.invoke(Residence.class, block.getLocation());
+					if (!fp.playerHas(player.getName(), player.getWorld().getName(), "build", true)) return true;
+				} catch (Exception ex2){
+					LockettePro.getPlugin().getLogger().info("[LockettePro] Sorry but my workaround does not work...");
+					LockettePro.getPlugin().getLogger().info("[LockettePro] Please leave a comment on the discussion regarding the issue!");
+				}
+			} catch (Exception e) {}
 		}
 		if (towny != null){
 			try {
@@ -149,6 +166,12 @@ public class Dependency {
 		if (simpleclans != null){
 			// TODO or not todo
 		}
+		if (griefprevention != null){
+			Claim claim = GriefPrevention.instance.dataStore.getClaimAt(block.getLocation(), false, null);
+			if (claim != null){
+				if (claim.allowBuild(player, Material.WALL_SIGN) != null) return true;
+			}
+		}
 		return false;
 	}
 	
@@ -198,12 +221,13 @@ public class Dependency {
 	}
 	
 	public static boolean isSimpleClanOf(String line, Player player){
+		if (simpleclans == null) return false;
 		try {
-			ClanPlayer clanplayer = clanmanager.getClanPlayer(player);
+			ClanPlayer clanplayer = ((SimpleClans)simpleclans).getClanManager().getClanPlayer(player);
 			if (clanplayer != null){
 				Clan clan = clanplayer.getClan();
 				if (clan != null){
-					if (line.equals("[" + clan.getName() + "]")) return true;
+					if (line.equals("[" + clan.getTag() + "]")) return true;
 				}
 			}
 		} catch (Exception e){}
